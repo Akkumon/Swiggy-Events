@@ -9,6 +9,7 @@ import EventDetail from "./components/EventDetail";
 import CreateEvent from "./components/CreateEvent";
 import DeliveryDashboard from "./components/DeliveryDashboard";
 import NotFound from "./pages/NotFound";
+import TabBar from "./components/TabBar";
 
 const queryClient = new QueryClient();
 
@@ -18,13 +19,16 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<EventsHome />} />
-          <Route path="/event/:id" element={<EventDetail />} />
-          <Route path="/create-event" element={<CreateEvent />} />
-          <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="pb-16">
+          <Routes>
+            <Route path="/" element={<EventsHome />} />
+            <Route path="/event/:id" element={<EventDetail />} />
+            <Route path="/create-event" element={<CreateEvent />} />
+            <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+        <TabBar />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
