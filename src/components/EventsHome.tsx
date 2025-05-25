@@ -62,7 +62,13 @@ const EventsHome = () => {
       {/* Header */}
       <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
         <div className="px-4 py-3">
-          <h1 className="text-2xl font-bold text-orange-600 mb-3">Swiggy Events</h1>
+          <div className="flex items-center mb-3">
+            {/* Swiggy Logo */}
+            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center mr-3">
+              <span className="text-white font-bold text-sm">S</span>
+            </div>
+            <h1 className="text-2xl font-bold text-orange-600">Swiggy Events</h1>
+          </div>
           
           {/* Tab Navigation */}
           <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
