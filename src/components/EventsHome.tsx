@@ -64,8 +64,12 @@ const EventsHome = () => {
         <div className="px-4 py-3">
           <div className="flex items-center mb-3">
             {/* Swiggy Logo */}
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center mr-3">
-              <span className="text-white font-bold text-sm">S</span>
+            <div className="w-8 h-8 mr-3">
+              <img 
+                src="/lovable-uploads/0f555462-9c4a-4b14-883a-dae7423545e2.png" 
+                alt="Swiggy Logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
             <h1 className="text-2xl font-bold text-orange-600">Swiggy Events</h1>
           </div>
