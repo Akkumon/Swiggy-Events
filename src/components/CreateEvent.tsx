@@ -175,7 +175,7 @@ const CreateEvent = () => {
               <Checkbox
                 id="foodAvailable"
                 checked={formData.foodAvailable}
-                onCheckedChange={(checked) => setFormData({ ...formData, foodAvailable: checked })}
+                onCheckedChange={(checked) => setFormData({ ...formData, foodAvailable: checked === true })}
               />
               <Label htmlFor="foodAvailable">
                 Enable food ordering for this event
@@ -195,7 +195,7 @@ const CreateEvent = () => {
                         id={`restaurant-${restaurant.id}`}
                         checked={formData.partnerRestaurants.includes(restaurant.id)}
                         onCheckedChange={(checked) => {
-                          if (checked) {
+                          if (checked === true) {
                             setFormData({
                               ...formData,
                               partnerRestaurants: [...formData.partnerRestaurants, restaurant.id]
