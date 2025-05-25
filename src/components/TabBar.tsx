@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, ShoppingBag, Calendar, User } from 'lucide-react';
+import { MapPin, ShoppingBag, Calendar, User, Package } from 'lucide-react';
 
 const TabBar = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const TabBar = () => {
     {
       id: 'food',
       label: 'FOOD',
-      icon: ShoppingBag,
+      icon: Package,
       path: '/food',
       isActive: location.pathname === '/food'
     },
