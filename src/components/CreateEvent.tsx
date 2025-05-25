@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -9,9 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useNavigate } from 'react-router-dom';
+import AIEventHelper from './AIEventHelper';
 
 const CreateEvent = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     eventName: '',
     eventType: '',
@@ -43,9 +44,54 @@ const CreateEvent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
     console.log('Event created:', formData);
     navigate('/');
+  };
+
+  // AI Helper Functions
+  const generateTitle = async () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setFormData({
+        ...formData,
+        eventName: "Bangalore Street Food Carnival 2025"
+      });
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const generateDescription = async () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setFormData({
+        ...formData,
+        description: "Join us for Bangalore's most vibrant street food celebration! Experience the authentic flavors of India with over 20 handpicked vendors, live cooking demonstrations, and cultural performances. Perfect for families and food enthusiasts alike."
+      });
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const suggestVendors = async () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setFormData({
+        ...formData,
+        partnerRestaurants: [1, 2, 3]
+      });
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const generateMarketing = async () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      alert("🎉 Marketing content generated! Check your clipboard for:\n\n📍 Instagram: Experience the magic of Bangalore's street food scene at our carnival! 🍜\n\n🌟 Facebook: Join us for an unforgettable culinary journey through India's finest street foods...");
+      setIsLoading(false);
+    }, 1500);
   };
 
   return (
@@ -73,6 +119,17 @@ const CreateEvent = () => {
             Create engaging local events and connect with your community. Add participating restaurants to make your event even more appealing.
           </p>
         </Card>
+
+        {/* AI Helper */}
+        <div className="mb-6">
+          <AIEventHelper 
+            onGenerateTitle={generateTitle}
+            onGenerateDescription={generateDescription}
+            onSuggestVendors={suggestVendors}
+            onGenerateMarketing={generateMarketing}
+            isLoading={isLoading}
+          />
+        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
