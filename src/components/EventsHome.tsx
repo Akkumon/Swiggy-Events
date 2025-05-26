@@ -73,7 +73,7 @@ const EventsHome = () => {
             </div>
             <div className="flex flex-col">
               <h1 className="text-2xl font-bold text-orange-600 leading-tight">Swiggy</h1>
-              <h2 className="text-2xl font-medium text-orange-600 leading-tight">Events</h2>
+              <h2 className="text-lg font-medium text-orange-600 leading-tight">Events</h2>
             </div>
           </div>
           
