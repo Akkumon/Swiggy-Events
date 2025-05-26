@@ -8,6 +8,8 @@ import EventsHome from "./components/EventsHome";
 import EventDetail from "./components/EventDetail";
 import CreateEvent from "./components/CreateEvent";
 import DeliveryDashboard from "./components/DeliveryDashboard";
+import OrderHistory from "./components/OrderHistory";
+import PartnerPortal from "./components/PartnerPortal";
 import NotFound from "./pages/NotFound";
 import TabBar from "./components/TabBar";
 
@@ -25,6 +27,8 @@ const App = () => (
             <Route path="/event/:id" element={<EventDetail />} />
             <Route path="/create-event" element={<CreateEvent />} />
             <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
+            <Route path="/order-history" element={<OrderHistory />} />
+            <Route path="/partner-portal" element={<PartnerPortal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

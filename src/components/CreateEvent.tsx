@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -9,9 +10,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { useNavigate } from 'react-router-dom';
 import AIEventHelper from './AIEventHelper';
+import { restaurantImages } from '@/data/mockData';
+import { useToast } from '@/hooks/use-toast';
 
 const CreateEvent = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     eventName: '',
@@ -45,37 +49,30 @@ const CreateEvent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Event created:', formData);
+    toast({
+      title: "Event Created Successfully!",
+      description: "Your event has been published and is now live.",
+    });
     navigate('/');
   };
 
   // AI Helper Functions
-  const generateTitle = async () => {
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setFormData({
-        ...formData,
-        eventName: "Bangalore Street Food Carnival 2025"
-      });
-      setIsLoading(false);
-    }, 1500);
+  const handleGenerateTitle = (title: string) => {
+    setFormData({
+      ...formData,
+      eventName: title
+    });
   };
 
-  const generateDescription = async () => {
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setFormData({
-        ...formData,
-        description: "Join us for Bangalore's most vibrant street food celebration! Experience the authentic flavors of India with over 20 handpicked vendors, live cooking demonstrations, and cultural performances. Perfect for families and food enthusiasts alike."
-      });
-      setIsLoading(false);
-    }, 1500);
+  const handleGenerateDescription = (description: string) => {
+    setFormData({
+      ...formData,
+      description: description
+    });
   };
 
   const suggestVendors = async () => {
     setIsLoading(true);
-    // Simulate API call
     setTimeout(() => {
       setFormData({
         ...formData,
@@ -85,13 +82,12 @@ const CreateEvent = () => {
     }, 1500);
   };
 
-  const generateMarketing = async () => {
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      alert("🎉 Marketing content generated! Check your clipboard for:\n\n📍 Instagram: Experience the magic of Bangalore's street food scene at our carnival! 🍜\n\n🌟 Facebook: Join us for an unforgettable culinary journey through India's finest street foods...");
-      setIsLoading(false);
-    }, 1500);
+  const handleGenerateMarketing = (content: string) => {
+    toast({
+      title: "Marketing Content Generated!",
+      description: "Marketing content has been copied to your clipboard.",
+    });
+    navigator.clipboard.writeText(content);
   };
 
   return (
@@ -123,11 +119,16 @@ const CreateEvent = () => {
         {/* AI Helper */}
         <div className="mb-6">
           <AIEventHelper 
-            onGenerateTitle={generateTitle}
-            onGenerateDescription={generateDescription}
+            onGenerateTitle={handleGenerateTitle}
+            onGenerateDescription={handleGenerateDescription}
             onSuggestVendors={suggestVendors}
-            onGenerateMarketing={generateMarketing}
+            onGenerateMarketing={handleGenerateMarketing}
             isLoading={isLoading}
+            eventData={{
+              eventType: formData.eventType,
+              location: formData.location,
+              eventName: formData.eventName
+            }}
           />
         </div>
 
@@ -245,9 +246,9 @@ const CreateEvent = () => {
                   Select restaurants that will participate in your event:
                 </p>
                 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {availableRestaurants.map((restaurant) => (
-                    <div key={restaurant.id} className="flex items-center space-x-2 p-3 border rounded-lg">
+                    <div key={restaurant.id} className="flex items-center space-x-3 p-3 border rounded-lg">
                       <Checkbox
                         id={`restaurant-${restaurant.id}`}
                         checked={formData.partnerRestaurants.includes(restaurant.id)}
@@ -265,6 +266,15 @@ const CreateEvent = () => {
                           }
                         }}
                       />
+                      
+                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
+                        <img
+                          src={restaurantImages[restaurant.id]}
+                          alt={restaurant.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      
                       <div className="flex-1">
                         <Label htmlFor={`restaurant-${restaurant.id}`} className="font-medium">
                           {restaurant.name}

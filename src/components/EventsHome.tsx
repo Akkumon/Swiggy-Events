@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MapPin, Share, ArrowDown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -64,7 +63,7 @@ const EventsHome = () => {
         <div className="px-4 py-3">
           <div className="flex items-center mb-3">
             {/* Swiggy Logo */}
-            <div className="w-12 h-12 mr-4">
+            <div className="w-16 h-16 mr-4">
               <img 
                 src="/lovable-uploads/0f555462-9c4a-4b14-883a-dae7423545e2.png" 
                 alt="Swiggy Logo" 
@@ -192,7 +191,12 @@ const EventsHome = () => {
           <div className="text-center py-12">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Your Event Food Orders</h3>
             <p className="text-gray-600 mb-4">Track orders placed for events you're attending</p>
-            <Button variant="outline">View Order History</Button>
+            <Button 
+              variant="outline"
+              onClick={() => navigate('/order-history')}
+            >
+              View Order History
+            </Button>
           </div>
         )}
 
@@ -214,7 +218,11 @@ const EventsHome = () => {
               <p className="text-sm text-gray-600 mb-3">
                 Promote your events and reach more customers in your neighborhood
               </p>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/partner-portal')}
+              >
                 Partner Portal
               </Button>
             </div>
