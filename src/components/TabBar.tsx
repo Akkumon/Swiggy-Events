@@ -13,21 +13,21 @@ const TabBar = () => {
       label: 'SWIGGY',
       icon: MapPin,
       path: '/',
-      isActive: location.pathname === '/'
+      isActive: false
     },
     {
       id: 'food',
       label: 'FOOD',
       icon: Package,
       path: '/food',
-      isActive: location.pathname === '/food'
+      isActive: false
     },
     {
       id: 'instamart',
       label: 'INSTAMART',
       icon: ShoppingBag,
       path: '/instamart',
-      isActive: location.pathname === '/instamart'
+      isActive: false
     },
     {
       id: 'events',
@@ -41,7 +41,7 @@ const TabBar = () => {
       label: 'ACCOUNT',
       icon: User,
       path: '/account',
-      isActive: location.pathname === '/account'
+      isActive: false
     }
   ];
 

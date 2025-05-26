@@ -64,14 +64,17 @@ const EventsHome = () => {
         <div className="px-4 py-3">
           <div className="flex items-center mb-3">
             {/* Swiggy Logo */}
-            <div className="w-8 h-8 mr-3">
+            <div className="w-12 h-12 mr-4">
               <img 
                 src="/lovable-uploads/0f555462-9c4a-4b14-883a-dae7423545e2.png" 
                 alt="Swiggy Logo" 
                 className="w-full h-full object-contain"
               />
             </div>
-            <h1 className="text-2xl font-bold text-orange-600">Swiggy Events</h1>
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-bold text-orange-600 leading-tight">Swiggy</h1>
+              <h2 className="text-2xl font-medium text-orange-600 leading-tight">Events</h2>
+            </div>
           </div>
           
           {/* Tab Navigation */}
