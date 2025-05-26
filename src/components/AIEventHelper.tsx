@@ -124,49 +124,49 @@ const AIEventHelper = ({
           </div>
         )}
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           <Button
             variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-xs sm:text-sm p-2 sm:p-3 h-auto"
+            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-center"
             onClick={() => handleAIAction('title')}
             disabled={isLoading || isGenerating}
           >
-            <Wand2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-            <span className="truncate">
+            <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
+            <span className="text-center leading-tight">
               {isGenerating ? 'Generating...' : 'Generate Title'}
             </span>
           </Button>
           
           <Button
             variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-xs sm:text-sm p-2 sm:p-3 h-auto"
+            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-center"
             onClick={() => handleAIAction('description')}
             disabled={isLoading || isGenerating}
           >
-            <Wand2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-            <span className="truncate">
+            <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
+            <span className="text-center leading-tight">
               {isGenerating ? 'Generating...' : 'Generate Description'}
             </span>
           </Button>
           
           <Button
             variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-xs sm:text-sm p-2 sm:p-3 h-auto"
+            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-center"
             onClick={onSuggestVendors}
             disabled={isLoading || isGenerating}
           >
-            <Wand2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-            <span className="truncate">Suggest Vendors</span>
+            <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
+            <span className="text-center leading-tight">Suggest Vendors</span>
           </Button>
           
           <Button
             variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-xs sm:text-sm p-2 sm:p-3 h-auto"
+            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-center"
             onClick={() => handleAIAction('marketing')}
             disabled={isLoading || isGenerating}
           >
-            <Wand2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-            <span className="truncate">
+            <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
+            <span className="text-center leading-tight">
               {isGenerating ? 'Generating...' : 'Generate Marketing'}
             </span>
           </Button>
