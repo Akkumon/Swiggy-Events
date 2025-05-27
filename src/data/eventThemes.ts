@@ -1,4 +1,3 @@
-
 export interface EventTheme {
   id: string;
   name: string;
@@ -82,7 +81,7 @@ export const eventThemes: Record<string, EventTheme> = {
       accentFont: 'font-mono'
     },
     visualElements: {
-      cardStyle: 'border-l-4 border-blue-400',
+      cardStyle: '',
       borderStyle: 'rounded-r-xl',
       shadowStyle: 'shadow-md hover:shadow-lg'
     },
