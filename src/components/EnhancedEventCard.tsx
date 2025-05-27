@@ -75,7 +75,7 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
           {event.location}
         </div>
 
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex justify-between items-center pt-3">
           {/* Date and Attendees */}
           <div className="text-xs sm:text-sm">
             <div className="flex items-center mb-1">
