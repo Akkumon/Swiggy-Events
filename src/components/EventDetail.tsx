@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MapPin, Share, ArrowDown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
+import CommunityVoices from './CommunityVoices';
 
 const EventDetail = () => {
   const navigate = useNavigate();
@@ -140,6 +140,9 @@ const EventDetail = () => {
             </Button>
           </div>
         </Card>
+
+        {/* Community Voices Section */}
+        <CommunityVoices eventId={1} />
 
         {/* Agenda */}
         <Card className="p-4">
