@@ -36,7 +36,7 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
       onClick={onViewDetails}
     >
       {/* Image with hand-drawn map overlay on hover */}
-      <div className="relative h-48 bg-gray-200 overflow-hidden">
+      <div className="relative h-40 sm:h-48 md:h-56 bg-gray-200 overflow-hidden">
         <img
           src={event.image}
           alt={event.name}
@@ -45,8 +45,8 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
         
         {/* Editor's Pick Badge */}
         {event.editorsPick && (
-          <div className="absolute top-3 left-3">
-            <Badge className="bg-purple-600 hover:bg-purple-700 text-white">
+          <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
+            <Badge className="bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm">
               ✨ Editor's Pick
             </Badge>
           </div>
@@ -54,8 +54,8 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
         
         {/* Food Available Badge */}
         {event.foodAvailable && (
-          <div className="absolute top-3 right-3">
-            <Badge className="bg-orange-500 hover:bg-orange-600">
+          <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
+            <Badge className="bg-orange-500 hover:bg-orange-600 text-xs sm:text-sm">
               Food Available
             </Badge>
           </div>
@@ -64,13 +64,13 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
         {/* Hand-drawn style map overlay on hover */}
         {isHovered && (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300">
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 m-4 border-2 border-dashed border-orange-300">
-              <div className="flex items-center text-sm">
-                <MapPin className="h-4 w-4 mr-2 text-orange-600" />
+            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-3 sm:p-4 m-2 sm:m-4 border-2 border-dashed border-orange-300">
+              <div className="flex items-center text-xs sm:text-sm">
+                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-orange-600" />
                 <span className="font-medium">Meet the Host</span>
               </div>
               {event.hostNote && (
-                <p className="text-xs text-gray-600 mt-1 italic">
+                <p className="text-[10px] sm:text-xs text-gray-600 mt-1 italic">
                   "{event.hostNote}"
                 </p>
               )}
@@ -80,19 +80,19 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
       </div>
 
       {/* Content with thematic styling */}
-      <div className={`p-4 ${theme.colors.background}`}>
+      <div className={`p-3 sm:p-4 ${theme.colors.background}`}>
         <div className="flex justify-between items-start mb-2">
-          <h3 className={`text-lg font-semibold tracking-tight ${theme.colors.primary} flex-1`}>
+          <h3 className={`text-base sm:text-lg font-semibold tracking-tight ${theme.colors.primary} flex-1`}>
             {event.name}
           </h3>
         </div>
 
-        <div className={`flex items-center text-sm ${theme.colors.secondary} mb-2`}>
-          <MapPin className="h-4 w-4 mr-1" />
+        <div className={`flex items-center text-xs sm:text-sm ${theme.colors.secondary} mb-2`}>
+          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
           {event.location}
         </div>
 
-        <p className={`text-sm ${theme.colors.primary} mb-3 line-clamp-2 ${theme.typography.bodyFont}`}>
+        <p className={`text-xs sm:text-sm ${theme.colors.primary} mb-3 line-clamp-2 ${theme.typography.bodyFont}`}>
           {event.description}
         </p>
 
@@ -100,8 +100,8 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
         {event.userTestimonial && (
           <div className="mb-3 p-2 bg-white/60 rounded-lg border-l-3 border-orange-300">
             <div className="flex items-start">
-              <Quote className="h-3 w-3 text-orange-500 mr-1 mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-gray-700 italic leading-relaxed">
+              <Quote className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-orange-500 mr-1 mt-0.5 flex-shrink-0" />
+              <p className="text-[10px] sm:text-xs text-gray-700 italic leading-relaxed">
                 {event.userTestimonial}
               </p>
             </div>
@@ -111,24 +111,27 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
         {/* Editor's note for picks */}
         {event.editorsPick && event.editorNote && (
           <div className="mb-3 p-2 bg-purple-50 rounded-lg border border-purple-200">
-            <p className={`text-xs ${theme.colors.accent} ${theme.typography.accentFont}`}>
+            <p className={`text-[10px] sm:text-xs ${theme.colors.accent} ${theme.typography.accentFont}`}>
               <span className="font-semibold">Editor's Note:</span> {event.editorNote}
             </p>
           </div>
         )}
 
         <div className="flex justify-between items-center">
-          <div className="text-sm">
+          <div className="text-xs sm:text-sm">
             <div className="flex items-center mb-1">
-              <Calendar className="h-3 w-3 mr-1 text-orange-500" />
+              <Calendar className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-1 text-orange-500" />
               <span className={`font-medium ${theme.colors.accent}`}>{event.date}</span>
             </div>
             <div className="flex items-center">
-              <Users className="h-3 w-3 mr-1 text-gray-500" />
-              <span className="text-gray-500 text-xs">{event.attendees} going</span>
+              <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-1 text-gray-500" />
+              <span className="text-gray-500 text-[10px] sm:text-xs">{event.attendees} going</span>
             </div>
           </div>
-          <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
+          <Button 
+            size="sm" 
+            className="bg-orange-500 hover:bg-orange-600 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
+          >
             View Details
           </Button>
         </div>
