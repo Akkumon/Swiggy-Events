@@ -31,7 +31,7 @@ const EventsHome = () => {
         <div className="container-responsive py-3 md:py-4">
           <div className="flex items-center mb-3">
             {/* Swiggy Logo */}
-            <div className="w-12 h-12 md:w-16 md:h-16 mr-4">
+            <div className="w-12 h-12 md:w-16 md:h-16 mr-2">
               <img 
                 src="/lovable-uploads/0f555462-9c4a-4b14-883a-dae7423545e2.png" 
                 alt="Swiggy Logo" 
