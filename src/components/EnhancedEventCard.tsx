@@ -63,7 +63,7 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
       </div>
 
       {/* Content with thematic styling */}
-      <div className={`p-3 sm:p-4 ${theme.colors.background}`}>
+      <div className={`p-3 sm:p-4 pb-4 sm:pb-5 ${theme.colors.background}`}>
         <div className="flex justify-between items-start mb-2">
           <h3 className={`text-base sm:text-lg font-semibold tracking-tight ${theme.colors.primary} flex-1`}>
             {event.name}
