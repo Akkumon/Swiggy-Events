@@ -6,21 +6,16 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
 import CommunityVoices from './CommunityVoices';
+import { useParams } from 'react-router-dom';
+import { mockEvents } from '@/data/mockEvents';
 
 const EventDetail = () => {
   const navigate = useNavigate();
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+  const { id } = useParams<{ id: string }>();
+  const eventId = parseInt(id || '', 10);
 
-  const eventData = {
-    name: "Street Food Festival",
-    date: "Today, 6:00 PM - 11:00 PM",
-    location: "Central Park, Koramangala",
-    description: "Experience the best street food from 20+ vendors. This vibrant festival brings together the city's most loved street food vendors in one location. Enjoy live music, community activities, and incredible food in a family-friendly atmosphere.",
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=600&h=300&fit=crop",
-    attendees: 156,
-    organizer: "Koramangala Community Hub",
-    type: "Food Festival"
-  };
+  const eventData = mockEvents.find(event => event.id === eventId);
 
   const restaurants = [
     {
@@ -62,6 +57,18 @@ const EventDetail = () => {
     { time: "8:30 PM", activity: "Community Activities" },
     { time: "10:00 PM", activity: "Event Wind Down" }
   ];
+
+  if (!eventData) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Card className="p-6 text-center">
+          <h1 className="text-xl font-semibold mb-4">Event Not Found</h1>
+          <p className="text-gray-600 mb-4">The event you are looking for does not exist or has been removed.</p>
+          <Button onClick={() => navigate('/')}>Go to Home</Button>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -127,7 +134,7 @@ const EventDetail = () => {
             
             <div>
               <p className="text-sm text-gray-600">Organized by</p>
-              <p className="font-medium text-gray-900">{eventData.organizer}</p>
+              <p className="font-medium text-gray-900">{eventData.organizer || 'Community Organizer'}</p>
             </div>
           </div>
 
@@ -142,7 +149,7 @@ const EventDetail = () => {
         </Card>
 
         {/* Community Voices Section */}
-        <CommunityVoices eventId={1} />
+        <CommunityVoices eventId={eventId} />
 
         {/* Agenda */}
         <Card className="p-4">
