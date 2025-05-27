@@ -188,7 +188,7 @@ const CreateEvent = () => {
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => navigate('/')}
+            onClick={() => navigate(-1)}
             className="mr-3"
           >
             ← Back
