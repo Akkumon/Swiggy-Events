@@ -126,46 +126,46 @@ const AIEventHelper = ({
         <div className="grid grid-cols-2 gap-3">
           <Button
             variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-center"
+            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-start"
             onClick={() => handleAIAction('title')}
             disabled={isLoading || isGenerating}
           >
             <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
-            <span className="text-center leading-tight">
+            <span className="leading-tight">
               {isGenerating ? 'Generating...' : 'Generate Title'}
             </span>
           </Button>
           
           <Button
             variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-center"
+            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-start"
             onClick={() => handleAIAction('description')}
             disabled={isLoading || isGenerating}
           >
             <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
-            <span className="text-center leading-tight">
+            <span className="leading-tight">
               {isGenerating ? 'Generating...' : 'Generate Description'}
             </span>
           </Button>
           
           <Button
             variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-center"
+            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-start"
             onClick={onSuggestVendors}
             disabled={isLoading || isGenerating}
           >
             <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
-            <span className="text-center leading-tight">Suggest Vendors</span>
+            <span className="leading-tight">Suggest Vendors</span>
           </Button>
           
           <Button
             variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-center"
+            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-start"
             onClick={() => handleAIAction('marketing')}
             disabled={isLoading || isGenerating}
           >
             <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
-            <span className="text-center leading-tight">
+            <span className="leading-tight">
               {isGenerating ? 'Generating...' : 'Generate Marketing'}
             </span>
           </Button>
