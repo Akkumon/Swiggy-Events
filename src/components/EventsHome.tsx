@@ -28,7 +28,7 @@ const EventsHome = () => {
     <div className="min-h-screen bg-white font-sans">
       {/* Header */}
       <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
-        <div className="container-responsive">
+        <div className="container-responsive py-3 md:py-4">
           <div className="flex items-center mb-3">
             {/* Swiggy Logo */}
             <div className="w-12 h-12 md:w-16 md:h-16 mr-4">
