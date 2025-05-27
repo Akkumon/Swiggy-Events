@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,30 +11,33 @@ import OrderHistory from "./components/OrderHistory";
 import PartnerPortal from "./components/PartnerPortal";
 import NotFound from "./pages/NotFound";
 import TabBar from "./components/TabBar";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <div className="pb-16">
-          <Routes>
-            <Route path="/" element={<EventsHome />} />
-            <Route path="/event/:id" element={<EventDetail />} />
-            <Route path="/create-event" element={<CreateEvent />} />
-            <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
-            <Route path="/order-history" element={<OrderHistory />} />
-            <Route path="/partner-portal" element={<PartnerPortal />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-        <TabBar />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <div className="pb-16">
+            <Routes>
+              <Route path="/" element={<EventsHome />} />
+              <Route path="/event/:id" element={<EventDetail />} />
+              <Route path="/create-event" element={<CreateEvent />} />
+              <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
+              <Route path="/order-history" element={<OrderHistory />} />
+              <Route path="/partner-portal" element={<PartnerPortal />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+          <TabBar />
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

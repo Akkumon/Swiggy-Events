@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -179,7 +178,7 @@ const AIEventHelper = ({
         )}
 
         <div className="text-xs text-gray-500 text-center">
-          💡 Works instantly without API key • Enhanced with OpenAI when available
+          💡 AI-powered event assistant to help you create engaging content
         </div>
       </div>
     </Card>

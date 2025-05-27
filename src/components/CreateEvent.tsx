@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -13,11 +12,35 @@ import AIEventHelper from './AIEventHelper';
 import { restaurantImages } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
 
+interface FormData {
+  eventName: string;
+  eventType: string;
+  date: string;
+  time: string;
+  location: string;
+  description: string;
+  maxAttendees: string;
+  foodAvailable: boolean;
+  partnerRestaurants: number[];
+}
+
+interface FormErrors {
+  eventName?: string;
+  eventType?: string;
+  date?: string;
+  time?: string;
+  location?: string;
+  description?: string;
+  maxAttendees?: string;
+}
+
 const CreateEvent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [formData, setFormData] = useState<FormData>({
     eventName: '',
     eventType: '',
     date: '',
@@ -46,14 +69,81 @@ const CreateEvent = () => {
     { id: 5, name: 'Spice Garden', cuisine: 'Multi-cuisine' }
   ];
 
-  const handleSubmit = (e) => {
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+    
+    if (!formData.eventName.trim()) {
+      newErrors.eventName = 'Event name is required';
+    }
+    
+    if (!formData.eventType) {
+      newErrors.eventType = 'Event type is required';
+    }
+    
+    if (!formData.date) {
+      newErrors.date = 'Date is required';
+    } else {
+      const selectedDate = new Date(formData.date);
+      const today = new Date();
+      if (selectedDate < today) {
+        newErrors.date = 'Date cannot be in the past';
+      }
+    }
+    
+    if (!formData.time) {
+      newErrors.time = 'Time is required';
+    }
+    
+    if (!formData.location.trim()) {
+      newErrors.location = 'Location is required';
+    }
+    
+    if (!formData.description.trim()) {
+      newErrors.description = 'Description is required';
+    }
+    
+    if (formData.maxAttendees) {
+      const attendees = parseInt(formData.maxAttendees);
+      if (isNaN(attendees) || attendees <= 0) {
+        newErrors.maxAttendees = 'Maximum attendees must be a positive number';
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Event created:', formData);
-    toast({
-      title: "Event Created Successfully!",
-      description: "Your event has been published and is now live.",
-    });
-    navigate('/');
+    
+    if (!validateForm()) {
+      toast({
+        title: "Validation Error",
+        description: "Please check the form for errors",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      // TODO: Replace with actual API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "Event Created Successfully!",
+        description: "Your event has been published and is now live.",
+      });
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create event. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // AI Helper Functions
@@ -146,14 +236,20 @@ const CreateEvent = () => {
                   value={formData.eventName}
                   onChange={(e) => setFormData({ ...formData, eventName: e.target.value })}
                   placeholder="e.g., Community Street Food Festival"
-                  required
+                  className={errors.eventName ? "border-red-500" : ""}
                 />
+                {errors.eventName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.eventName}</p>
+                )}
               </div>
 
               <div>
                 <Label htmlFor="eventType">Event Type *</Label>
-                <Select onValueChange={(value) => setFormData({ ...formData, eventType: value })}>
-                  <SelectTrigger>
+                <Select 
+                  onValueChange={(value) => setFormData({ ...formData, eventType: value })}
+                  value={formData.eventType}
+                >
+                  <SelectTrigger className={errors.eventType ? "border-red-500" : ""}>
                     <SelectValue placeholder="Select event type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -164,6 +260,9 @@ const CreateEvent = () => {
                     ))}
                   </SelectContent>
                 </Select>
+                {errors.eventType && (
+                  <p className="text-red-500 text-sm mt-1">{errors.eventType}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -174,8 +273,11 @@ const CreateEvent = () => {
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    required
+                    className={errors.date ? "border-red-500" : ""}
                   />
+                  {errors.date && (
+                    <p className="text-red-500 text-sm mt-1">{errors.date}</p>
+                  )}
                 </div>
                 <div>
                   <Label htmlFor="time">Time *</Label>
@@ -184,8 +286,11 @@ const CreateEvent = () => {
                     type="time"
                     value={formData.time}
                     onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                    required
+                    className={errors.time ? "border-red-500" : ""}
                   />
+                  {errors.time && (
+                    <p className="text-red-500 text-sm mt-1">{errors.time}</p>
+                  )}
                 </div>
               </div>
 
@@ -196,31 +301,51 @@ const CreateEvent = () => {
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                   placeholder="e.g., Central Park, Koramangala"
-                  required
+                  className={errors.location ? "border-red-500" : ""}
                 />
+                {errors.location && (
+                  <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+                )}
               </div>
 
               <div>
-                <Label htmlFor="description">Event Description *</Label>
+                <Label htmlFor="description">Description *</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Describe your event, activities, and what attendees can expect..."
-                  rows={4}
-                  required
+                  placeholder="Describe your event..."
+                  className={errors.description ? "border-red-500" : ""}
                 />
+                {errors.description && (
+                  <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+                )}
               </div>
 
               <div>
-                <Label htmlFor="maxAttendees">Expected Attendees</Label>
+                <Label htmlFor="maxAttendees">Maximum Attendees</Label>
                 <Input
                   id="maxAttendees"
                   type="number"
                   value={formData.maxAttendees}
                   onChange={(e) => setFormData({ ...formData, maxAttendees: e.target.value })}
-                  placeholder="e.g., 100"
+                  placeholder="Enter maximum number of attendees"
+                  className={errors.maxAttendees ? "border-red-500" : ""}
                 />
+                {errors.maxAttendees && (
+                  <p className="text-red-500 text-sm mt-1">{errors.maxAttendees}</p>
+                )}
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="foodAvailable"
+                  checked={formData.foodAvailable}
+                  onCheckedChange={(checked) => 
+                    setFormData({ ...formData, foodAvailable: checked as boolean })
+                  }
+                />
+                <Label htmlFor="foodAvailable">Food will be available at the event</Label>
               </div>
             </div>
           </Card>
@@ -229,17 +354,6 @@ const CreateEvent = () => {
           <Card className="p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Food Integration</h3>
             
-            <div className="flex items-center space-x-2 mb-4">
-              <Checkbox
-                id="foodAvailable"
-                checked={formData.foodAvailable}
-                onCheckedChange={(checked) => setFormData({ ...formData, foodAvailable: checked === true })}
-              />
-              <Label htmlFor="foodAvailable">
-                Enable food ordering for this event
-              </Label>
-            </div>
-
             {formData.foodAvailable && (
               <div className="space-y-4">
                 <p className="text-sm text-gray-600">
@@ -298,21 +412,13 @@ const CreateEvent = () => {
             )}
           </Card>
 
-          {/* Submit */}
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1"
-              onClick={() => navigate('/')}
+          <div className="flex justify-end">
+            <Button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="w-full sm:w-auto"
             >
-              Save as Draft
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1 bg-orange-500 hover:bg-orange-600"
-            >
-              Publish Event
+              {isSubmitting ? "Creating Event..." : "Create Event"}
             </Button>
           </div>
         </form>

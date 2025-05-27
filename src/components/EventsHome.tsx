@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StoryHero from './StoryHero';
 import EnhancedEventCard from './EnhancedEventCard';
+import { Button } from '@/components/ui/button';
 
 const EventsHome = () => {
   const navigate = useNavigate();
@@ -178,7 +179,6 @@ const EventsHome = () => {
           </>
         )}
 
-        {/* ... keep existing code for other tabs */}
         {activeTab === 'food' && (
           <div className="text-center py-12">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Your Event Food Orders</h3>
@@ -186,6 +186,7 @@ const EventsHome = () => {
             <Button 
               variant="outline"
               onClick={() => navigate('/order-history')}
+              className="bg-orange-500 hover:bg-orange-600 text-white"
             >
               View Order History
             </Button>
@@ -214,6 +215,7 @@ const EventsHome = () => {
                 variant="outline" 
                 size="sm"
                 onClick={() => navigate('/partner-portal')}
+                className="border-orange-200 text-orange-600 hover:bg-orange-50"
               >
                 Partner Portal
               </Button>
@@ -228,6 +230,7 @@ const EventsHome = () => {
                 variant="outline" 
                 size="sm"
                 onClick={() => navigate('/delivery-dashboard')}
+                className="border-orange-200 text-orange-600 hover:bg-orange-50"
               >
                 DE Dashboard
               </Button>
