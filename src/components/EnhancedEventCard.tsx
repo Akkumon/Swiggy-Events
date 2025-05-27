@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -83,7 +82,7 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
       {/* Content with thematic styling */}
       <div className={`p-4 ${theme.colors.background}`}>
         <div className="flex justify-between items-start mb-2">
-          <h3 className={`text-lg font-semibold ${theme.colors.primary} ${theme.typography.headingFont} flex-1`}>
+          <h3 className={`text-lg font-semibold tracking-tight ${theme.colors.primary} flex-1`}>
             {event.name}
           </h3>
         </div>
