@@ -30,12 +30,12 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
 
   return (
     <Card 
-      className={`overflow-hidden transition-all duration-300 cursor-pointer ${theme.visualElements.shadowStyle} ${theme.visualElements.borderStyle} ${theme.visualElements.cardStyle}`}
+      className={`overflow-hidden transition-all duration-300 cursor-pointer ${theme.visualElements.shadowStyle}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onViewDetails}
     >
-      {/* Image with hand-drawn map overlay on hover */}
+      {/* Image */}
       <div className="relative h-40 sm:h-48 md:h-56 bg-gray-200 overflow-hidden">
         <img
           src={event.image}
@@ -60,23 +60,6 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
             </Badge>
           </div>
         )}
-        
-        {/* Hand-drawn style map overlay on hover */}
-        {isHovered && (
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300">
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-3 sm:p-4 m-2 sm:m-4 border-2 border-dashed border-orange-300">
-              <div className="flex items-center text-xs sm:text-sm">
-                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-orange-600" />
-                <span className="font-medium">Meet the Host</span>
-              </div>
-              {event.hostNote && (
-                <p className="text-[10px] sm:text-xs text-gray-600 mt-1 italic">
-                  "{event.hostNote}"
-                </p>
-              )}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Content with thematic styling */}
@@ -92,32 +75,8 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
           {event.location}
         </div>
 
-        <p className={`text-xs sm:text-sm ${theme.colors.primary} mb-3 line-clamp-2 ${theme.typography.bodyFont}`}>
-          {event.description}
-        </p>
-
-        {/* User testimonial section */}
-        {event.userTestimonial && (
-          <div className="mb-3 p-2 bg-white/60 rounded-lg border-l-3 border-orange-300">
-            <div className="flex items-start">
-              <Quote className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-orange-500 mr-1 mt-0.5 flex-shrink-0" />
-              <p className="text-[10px] sm:text-xs text-gray-700 italic leading-relaxed">
-                {event.userTestimonial}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Editor's note for picks */}
-        {event.editorsPick && event.editorNote && (
-          <div className="mb-3 p-2 bg-purple-50 rounded-lg border border-purple-200">
-            <p className={`text-[10px] sm:text-xs ${theme.colors.accent} ${theme.typography.accentFont}`}>
-              <span className="font-semibold">Editor's Note:</span> {event.editorNote}
-            </p>
-          </div>
-        )}
-
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mt-4">
+          {/* Date and Attendees */}
           <div className="text-xs sm:text-sm">
             <div className="flex items-center mb-1">
               <Calendar className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-1 text-orange-500" />
@@ -128,6 +87,7 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
               <span className="text-gray-500 text-[10px] sm:text-xs">{event.attendees} going</span>
             </div>
           </div>
+          {/* Buttons */}
           <div className="flex items-center gap-2">
             <Button 
               variant="ghost"

@@ -37,8 +37,8 @@ export const eventThemes: Record<string, EventTheme> = {
       accentFont: 'font-mono'
     },
     visualElements: {
-      cardStyle: 'border-2 border-dashed border-orange-200',
-      borderStyle: 'rounded-xl',
+      cardStyle: '',
+      borderStyle: '',
       shadowStyle: 'shadow-lg hover:shadow-xl'
     },
     mood: 'Bustling night markets',
@@ -59,8 +59,8 @@ export const eventThemes: Record<string, EventTheme> = {
       accentFont: 'font-light italic'
     },
     visualElements: {
-      cardStyle: 'border border-slate-200',
-      borderStyle: 'rounded-lg',
+      cardStyle: '',
+      borderStyle: '',
       shadowStyle: 'shadow-md hover:shadow-lg'
     },
     mood: 'Candlelight sophistication',
@@ -82,7 +82,7 @@ export const eventThemes: Record<string, EventTheme> = {
     },
     visualElements: {
       cardStyle: '',
-      borderStyle: 'rounded-r-xl',
+      borderStyle: '',
       shadowStyle: 'shadow-md hover:shadow-lg'
     },
     mood: 'Hands-on creativity',
@@ -103,8 +103,8 @@ export const eventThemes: Record<string, EventTheme> = {
       accentFont: 'font-handwriting'
     },
     visualElements: {
-      cardStyle: 'border-2 border-dotted border-emerald-200',
-      borderStyle: 'rounded-2xl',
+      cardStyle: '',
+      borderStyle: '',
       shadowStyle: 'shadow-lg hover:shadow-xl'
     },
     mood: 'Warm community connection',
