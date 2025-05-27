@@ -47,7 +47,7 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
         {event.editorsPick && (
           <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
             <Badge className="bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm">
-              ✨ Editor's Pick
+              ✨ Swiggy Pick
             </Badge>
           </div>
         )}

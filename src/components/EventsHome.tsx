@@ -89,10 +89,10 @@ const EventsHome = () => {
               <StoryHero event={featuredEvent} />
             </div>
 
-            {/* Human-Curated Editor's Section */}
+            {/* Human-Curated Swiggy Pick Section */}
             <div className="mb-6">
               <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 md:p-6 border-l-4 border-purple-400">
-                <h2 className="text-base md:text-lg font-semibold text-purple-900 mb-2 tracking-tight">This Week's Editor's Pick</h2>
+                <h2 className="text-base md:text-lg font-semibold text-purple-900 mb-2 tracking-tight">This Week's Swiggy Pick</h2>
                 <p className="text-sm md:text-base text-purple-700">
                   "This week I'm loving the Sunset Supper Club on Marine Drive—it's as much about the view as the dosa!"
                   <span className="block text-xs md:text-sm text-purple-600 mt-1 font-medium">— Priya, Swiggy Events Curator</span>
