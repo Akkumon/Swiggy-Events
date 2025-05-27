@@ -17,26 +17,26 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <div className="pb-16">
-            <Routes>
-              <Route path="/" element={<EventsHome />} />
-              <Route path="/event/:id" element={<EventDetail />} />
-              <Route path="/create-event" element={<CreateEvent />} />
-              <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
-              <Route path="/order-history" element={<OrderHistory />} />
-              <Route path="/partner-portal" element={<PartnerPortal />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-          <TabBar />
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <div className="pb-16">
+          <Routes>
+            <Route path="/" element={<EventsHome />} />
+            <Route path="/event/:id" element={<EventDetail />} />
+            <Route path="/create-event" element={<CreateEvent />} />
+            <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
+            <Route path="/order-history" element={<OrderHistory />} />
+            <Route path="/partner-portal" element={<PartnerPortal />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+        <TabBar />
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
   </ErrorBoundary>
 );
 

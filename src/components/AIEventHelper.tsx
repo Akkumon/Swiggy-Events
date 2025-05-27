@@ -123,7 +123,7 @@ const AIEventHelper = ({
           </div>
         )}
         
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Button
             variant="outline"
             className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-start"
