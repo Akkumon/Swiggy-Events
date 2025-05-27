@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StoryHero from './StoryHero';
 import EnhancedEventCard from './EnhancedEventCard';
-import { Button } from '@/components/ui/button';
+import { Button } from './ui/button';
 
 const EventsHome = () => {
   const navigate = useNavigate();
