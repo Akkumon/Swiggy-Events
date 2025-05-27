@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Users, Calendar, Quote } from 'lucide-react';
+import { MapPin, Users, Calendar, Quote, Share } from 'lucide-react';
 import { getEventTheme } from '@/data/eventThemes';
 
 interface EnhancedEventCardProps {
@@ -128,12 +128,37 @@ const EnhancedEventCard = ({ event, onViewDetails }: EnhancedEventCardProps) => 
               <span className="text-gray-500 text-[10px] sm:text-xs">{event.attendees} going</span>
             </div>
           </div>
-          <Button 
-            size="sm" 
-            className="bg-orange-500 hover:bg-orange-600 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
-          >
-            View Details
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent card click event
+                // TODO: Implement actual sharing functionality
+                console.log(`Sharing event: ${event.name}`);
+                // Example: navigator.share or open a share modal
+                if (navigator.share) {
+                  navigator.share({
+                    title: event.name,
+                    text: event.description,
+                    url: window.location.href, // Replace with actual event URL
+                  }).catch(console.error);
+                } else {
+                  // Fallback for browsers that don't support navigator.share
+                  alert(`Share this event: ${event.name} - ${window.location.href}`);
+                }
+              }}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <Share className="h-4 w-4" />
+            </Button>
+            <Button 
+              size="sm" 
+              className="bg-orange-500 hover:bg-orange-600 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
+            >
+              View Details
+            </Button>
+          </div>
         </div>
       </div>
     </Card>
