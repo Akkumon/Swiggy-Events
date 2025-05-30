@@ -1,11 +1,13 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Wand2, Key, Sparkles } from 'lucide-react';
+import { Wand2, Key, Sparkles, Zap } from 'lucide-react';
 import { OpenAIService } from '@/services/openaiService';
 import { useToast } from '@/hooks/use-toast';
+import SmartPromptWizard from './SmartPromptWizard';
 
 interface AIEventHelperProps {
   onGenerateTitle: (title: string) => void;
@@ -33,11 +35,24 @@ const AIEventHelper = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
+  const handleSmartGenerate = (type: 'title' | 'description' | 'marketing', content: string) => {
+    switch (type) {
+      case 'title':
+        onGenerateTitle(content);
+        break;
+      case 'description':
+        onGenerateDescription(content);
+        break;
+      case 'marketing':
+        onGenerateMarketing(content);
+        break;
+    }
+  };
+
   const handleAIAction = async (action: 'title' | 'description' | 'marketing') => {
     setIsGenerating(true);
     
     try {
-      // Always try to generate content, with or without API key
       const openAIService = new OpenAIService(apiKey || '');
       
       let result = '';
@@ -69,9 +84,7 @@ const AIEventHelper = ({
       
       toast({
         title: "Content Generated Successfully!",
-        description: apiKey && apiKey.startsWith('sk-') 
-          ? "AI-powered content has been generated for your event!" 
-          : "Smart content has been generated based on your event details!",
+        description: "Smart content has been generated based on your event details!",
       });
     } catch (error) {
       toast({
@@ -102,6 +115,31 @@ const AIEventHelper = ({
           </Button>
         </div>
 
+        {/* Smart Generation - Primary Option */}
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-2 border-purple-200">
+          <div className="flex items-center gap-2 mb-2">
+            <Zap className="h-4 w-4 text-purple-600" />
+            <span className="font-medium text-purple-900">Smart Generation</span>
+          </div>
+          <p className="text-sm text-purple-700 mb-3">
+            Get better results with context-aware AI generation
+          </p>
+          
+          <SmartPromptWizard
+            trigger={
+              <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                Start Smart Assistant
+              </Button>
+            }
+            onGenerate={handleSmartGenerate}
+            existingData={{
+              eventName: eventData.eventName,
+              location: eventData.location,
+              eventType: eventData.eventType
+            }}
+          />
+        </div>
+
         {showApiInput && (
           <div className="space-y-2 p-3 bg-white rounded-lg border">
             <Label htmlFor="apiKey" className="text-sm font-medium">
@@ -123,52 +161,60 @@ const AIEventHelper = ({
           </div>
         )}
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <Button
-            variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-start"
-            onClick={() => handleAIAction('title')}
-            disabled={isLoading || isGenerating}
-          >
-            <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
-            <span className="leading-tight">
-              {isGenerating ? 'Generating...' : 'Generate Title'}
-            </span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-start"
-            onClick={() => handleAIAction('description')}
-            disabled={isLoading || isGenerating}
-          >
-            <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
-            <span className="leading-tight">
-              {isGenerating ? 'Generating...' : 'Generate Description'}
-            </span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-start"
-            onClick={onSuggestVendors}
-            disabled={isLoading || isGenerating}
-          >
-            <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
-            <span className="leading-tight">Suggest Vendors</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="w-full border-orange-200 hover:bg-orange-100 text-sm py-3 h-auto min-h-[48px] flex items-center justify-start"
-            onClick={() => handleAIAction('marketing')}
-            disabled={isLoading || isGenerating}
-          >
-            <Wand2 className="mr-2 h-4 w-4 flex-shrink-0" />
-            <span className="leading-tight">
-              {isGenerating ? 'Generating...' : 'Generate Marketing'}
-            </span>
-          </Button>
+        {/* Quick Actions */}
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-gray-700">Quick Actions:</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full border-orange-200 hover:bg-orange-100 text-xs py-2 h-auto min-h-[40px] flex items-center justify-start"
+              onClick={() => handleAIAction('title')}
+              disabled={isLoading || isGenerating}
+            >
+              <Wand2 className="mr-2 h-3 w-3 flex-shrink-0" />
+              <span className="leading-tight">
+                {isGenerating ? 'Generating...' : 'Quick Title'}
+              </span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full border-orange-200 hover:bg-orange-100 text-xs py-2 h-auto min-h-[40px] flex items-center justify-start"
+              onClick={() => handleAIAction('description')}
+              disabled={isLoading || isGenerating}
+            >
+              <Wand2 className="mr-2 h-3 w-3 flex-shrink-0" />
+              <span className="leading-tight">
+                {isGenerating ? 'Generating...' : 'Quick Description'}
+              </span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full border-orange-200 hover:bg-orange-100 text-xs py-2 h-auto min-h-[40px] flex items-center justify-start"
+              onClick={onSuggestVendors}
+              disabled={isLoading || isGenerating}
+            >
+              <Wand2 className="mr-2 h-3 w-3 flex-shrink-0" />
+              <span className="leading-tight">Suggest Vendors</span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full border-orange-200 hover:bg-orange-100 text-xs py-2 h-auto min-h-[40px] flex items-center justify-start"
+              onClick={() => handleAIAction('marketing')}
+              disabled={isLoading || isGenerating}
+            >
+              <Wand2 className="mr-2 h-3 w-3 flex-shrink-0" />
+              <span className="leading-tight">
+                {isGenerating ? 'Generating...' : 'Quick Marketing'}
+              </span>
+            </Button>
+          </div>
         </div>
 
         {(isLoading || isGenerating) && (
@@ -178,7 +224,7 @@ const AIEventHelper = ({
         )}
 
         <div className="text-xs text-gray-500 text-center">
-          💡 AI-powered event assistant to help you create engaging content
+          💡 Smart Assistant provides context-aware content generation
         </div>
       </div>
     </Card>
