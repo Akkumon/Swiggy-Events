@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -162,58 +162,64 @@ Theme/Style: ${context.theme || 'welcoming and inclusive'}`;
         {trigger}
       </DialogTrigger>
       
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className="w-[95vw] max-w-lg max-h-[85vh] overflow-y-auto p-4">
+        <DialogHeader className="space-y-2">
+          <DialogTitle className="flex items-center gap-2 text-lg">
             <Wand2 className="h-5 w-5 text-orange-500" />
             Smart AI Assistant
           </DialogTitle>
+          <DialogDescription className="text-sm text-gray-600">
+            Get personalized content for your event
+          </DialogDescription>
         </DialogHeader>
 
         {step === 1 && (
-          <div className="space-y-6">
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <h3 className="font-medium text-orange-900 mb-2">Let's create amazing content together!</h3>
-              <p className="text-sm text-orange-700">
+          <div className="space-y-4">
+            <div className="bg-orange-50 p-3 rounded-lg">
+              <h3 className="font-medium text-orange-900 mb-1 text-sm">Let's create amazing content together!</h3>
+              <p className="text-xs text-orange-700">
                 Answer a few quick questions to get personalized, relevant content for your event.
               </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div>
-                <Label htmlFor="eventAbout">What is your event about? *</Label>
+                <Label htmlFor="eventAbout" className="text-sm font-medium">What is your event about? *</Label>
                 <Input
                   id="eventAbout"
                   value={context.eventAbout}
                   onChange={(e) => setContext({...context, eventAbout: e.target.value})}
-                  placeholder="e.g., Friday pizza fest, Indie music night, Chef's table at home"
+                  placeholder="e.g., Friday pizza fest, Indie music night"
+                  className="mt-1"
                 />
               </div>
 
               <div>
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="location" className="text-sm font-medium">Location</Label>
                 <Input
                   id="location"
                   value={context.location}
                   onChange={(e) => setContext({...context, location: e.target.value})}
                   placeholder="e.g., Bangalore, Mumbai, Virtual"
+                  className="mt-1"
                 />
               </div>
 
               <div>
-                <Label htmlFor="dateTime">Date & Time (optional)</Label>
+                <Label htmlFor="dateTime" className="text-sm font-medium">Date & Time (optional)</Label>
                 <Input
                   id="dateTime"
                   value={context.dateTime}
                   onChange={(e) => setContext({...context, dateTime: e.target.value})}
                   placeholder="e.g., Friday 7 PM, Weekend afternoon"
+                  className="mt-1"
                 />
               </div>
 
               <div>
-                <Label>Target Audience</Label>
+                <Label className="text-sm font-medium">Target Audience</Label>
                 <Select onValueChange={(value) => setContext({...context, targetAudience: value})}>
-                  <SelectTrigger>
+                  <SelectTrigger className="mt-1">
                     <SelectValue placeholder="Who is this event for?" />
                   </SelectTrigger>
                   <SelectContent>
@@ -227,9 +233,9 @@ Theme/Style: ${context.theme || 'welcoming and inclusive'}`;
               </div>
 
               <div>
-                <Label>Event Theme/Style</Label>
+                <Label className="text-sm font-medium">Event Theme/Style</Label>
                 <Select onValueChange={(value) => setContext({...context, theme: value})}>
-                  <SelectTrigger>
+                  <SelectTrigger className="mt-1">
                     <SelectValue placeholder="What's the vibe?" />
                   </SelectTrigger>
                   <SelectContent>
@@ -243,28 +249,30 @@ Theme/Style: ${context.theme || 'welcoming and inclusive'}`;
               </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-2 pt-2">
               <Button
                 variant="ghost"
                 onClick={() => setShowPromptPreview(!showPromptPreview)}
-                className="text-gray-600"
+                className="text-gray-600 text-sm h-8"
+                size="sm"
               >
-                <Eye className="h-4 w-4 mr-2" />
+                <Eye className="h-3 w-3 mr-2" />
                 {showPromptPreview ? 'Hide' : 'Preview'} Prompt
               </Button>
               
               <Button 
                 onClick={() => setStep(2)}
                 disabled={!context.eventAbout.trim()}
+                className="w-full"
               >
                 Continue
               </Button>
             </div>
 
             {showPromptPreview && (
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-medium mb-2">Example Prompt for Title:</h4>
-                <p className="text-sm text-gray-600 font-mono">
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <h4 className="font-medium mb-2 text-sm">Example Prompt for Title:</h4>
+                <p className="text-xs text-gray-600 font-mono leading-relaxed">
                   {buildPrompt('title')}
                 </p>
               </div>
@@ -273,24 +281,24 @@ Theme/Style: ${context.theme || 'welcoming and inclusive'}`;
         )}
 
         {step === 2 && (
-          <div className="space-y-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="font-medium text-blue-900 mb-2">Ready to generate!</h3>
-              <p className="text-sm text-blue-700">
+          <div className="space-y-4">
+            <div className="bg-blue-50 p-3 rounded-lg">
+              <h3 className="font-medium text-blue-900 mb-1 text-sm">Ready to generate!</h3>
+              <p className="text-xs text-blue-700">
                 Choose what type of content you'd like to create first.
               </p>
             </div>
 
-            <div className="grid gap-3">
+            <div className="space-y-2">
               <Button
                 onClick={() => handleGenerate('title')}
                 disabled={isGenerating}
-                className="w-full h-auto py-4 justify-start text-left"
+                className="w-full justify-start text-left h-auto p-3"
                 variant="outline"
               >
-                <div>
-                  <div className="font-medium">Event Title</div>
-                  <div className="text-sm text-gray-600">
+                <div className="text-left">
+                  <div className="font-medium text-sm">Event Title</div>
+                  <div className="text-xs text-gray-600 mt-1">
                     Catchy, memorable name for your event
                   </div>
                 </div>
@@ -299,12 +307,12 @@ Theme/Style: ${context.theme || 'welcoming and inclusive'}`;
               <Button
                 onClick={() => handleGenerate('description')}
                 disabled={isGenerating}
-                className="w-full h-auto py-4 justify-start text-left"
+                className="w-full justify-start text-left h-auto p-3"
                 variant="outline"
               >
-                <div>
-                  <div className="font-medium">Event Description</div>
-                  <div className="text-sm text-gray-600">
+                <div className="text-left">
+                  <div className="font-medium text-sm">Event Description</div>
+                  <div className="text-xs text-gray-600 mt-1">
                     Engaging description highlighting key benefits
                   </div>
                 </div>
@@ -313,12 +321,12 @@ Theme/Style: ${context.theme || 'welcoming and inclusive'}`;
               <Button
                 onClick={() => handleGenerate('marketing')}
                 disabled={isGenerating}
-                className="w-full h-auto py-4 justify-start text-left"
+                className="w-full justify-start text-left h-auto p-3"
                 variant="outline"
               >
-                <div>
-                  <div className="font-medium">Social Media Content</div>
-                  <div className="text-sm text-gray-600">
+                <div className="text-left">
+                  <div className="font-medium text-sm">Social Media Content</div>
+                  <div className="text-xs text-gray-600 mt-1">
                     Instagram-style post with hashtags and CTA
                   </div>
                 </div>
@@ -326,22 +334,22 @@ Theme/Style: ${context.theme || 'welcoming and inclusive'}`;
             </div>
 
             {isGenerating && (
-              <div className="text-center py-4">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-2"></div>
-                <p className="text-sm text-gray-600">Creating amazing content...</p>
+              <div className="text-center py-3">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500 mx-auto mb-2"></div>
+                <p className="text-xs text-gray-600">Creating amazing content...</p>
               </div>
             )}
 
-            <Button variant="ghost" onClick={() => setStep(1)}>
+            <Button variant="ghost" onClick={() => setStep(1)} className="w-full">
               ← Back
             </Button>
           </div>
         )}
 
         {step === 3 && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Badge variant="secondary" className="bg-green-100 text-green-800">
+              <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
                 {generationType.charAt(0).toUpperCase() + generationType.slice(1)} Generated
               </Badge>
               
@@ -350,29 +358,30 @@ Theme/Style: ${context.theme || 'welcoming and inclusive'}`;
                 size="sm"
                 onClick={handleRegenerate}
                 disabled={isGenerating}
+                className="h-8 text-xs"
               >
-                <RefreshCw className="h-4 w-4 mr-2" />
+                <RefreshCw className="h-3 w-3 mr-1" />
                 Regenerate
               </Button>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium mb-2">Generated Content:</h4>
-              <div className="bg-white p-3 rounded border text-sm">
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <h4 className="font-medium mb-2 text-sm">Generated Content:</h4>
+              <div className="bg-white p-3 rounded border text-xs leading-relaxed">
                 {generatedContent}
               </div>
             </div>
 
-            <div className="flex justify-between">
-              <Button variant="ghost" onClick={() => setStep(2)}>
+            <div className="flex flex-col gap-2">
+              <Button variant="ghost" onClick={() => setStep(2)} className="w-full">
                 ← Generate More
               </Button>
               
-              <div className="space-x-2">
-                <Button variant="outline" onClick={() => setIsOpen(false)}>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setIsOpen(false)} className="flex-1">
                   Cancel
                 </Button>
-                <Button onClick={handleUseContent}>
+                <Button onClick={handleUseContent} className="flex-1">
                   Use This Content
                 </Button>
               </div>
