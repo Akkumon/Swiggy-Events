@@ -6,12 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
 import CommunityVoices from './CommunityVoices';
+import BookingFlow from './BookingFlow';
 import { useParams } from 'react-router-dom';
 import { mockEvents } from '@/data/mockEvents';
 
 const EventDetail = () => {
   const navigate = useNavigate();
-  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const { id } = useParams<{ id: string }>();
   const eventId = parseInt(id || '', 10);
 
@@ -193,16 +193,10 @@ const EventDetail = () => {
               <p className="font-medium text-gray-900">{eventData.organizer || 'Community Organizer'}</p>
             </div>
           </div>
-
-          <div className="flex gap-3 mt-4">
-            <Button className="flex-1 bg-orange-500 hover:bg-orange-600">
-              RSVP to Event
-            </Button>
-            <Button variant="outline" className="flex-1">
-              Add to Calendar
-            </Button>
-          </div>
         </Card>
+
+        {/* New Bundled Booking Flow */}
+        <BookingFlow eventData={eventData} restaurantData={primaryRestaurant} />
 
         {/* Restaurant Menu Highlights */}
         <Card className="p-4">
