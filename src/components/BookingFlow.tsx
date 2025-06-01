@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,8 @@ import { Users, Calendar, Clock, MapPin, Star, Utensils, Ticket, Gift, MessageCi
 import BookingForm from './BookingForm';
 import GroupBookingOptions from './GroupBookingOptions';
 import BookingConfirmation from './BookingConfirmation';
+import TimingCoordination from './TimingCoordination';
+import CoordinationStatus from './CoordinationStatus';
 
 interface BookingFlowProps {
   eventData: any;
@@ -16,8 +17,9 @@ interface BookingFlowProps {
 
 const BookingFlow = ({ eventData, restaurantData }: BookingFlowProps) => {
   const [selectedPackage, setSelectedPackage] = useState<'bundle' | 'event-only' | null>(null);
-  const [bookingStep, setBookingStep] = useState<'selection' | 'form' | 'group' | 'confirmation'>('selection');
+  const [bookingStep, setBookingStep] = useState<'selection' | 'timing' | 'form' | 'group' | 'confirmation'>('selection');
   const [bookingData, setBookingData] = useState(null);
+  const [selectedTiming, setSelectedTiming] = useState(null);
 
   const bundlePrice = {
     dinner: 800,
@@ -28,11 +30,20 @@ const BookingFlow = ({ eventData, restaurantData }: BookingFlowProps) => {
 
   const handlePackageSelect = (packageType: 'bundle' | 'event-only') => {
     setSelectedPackage(packageType);
+    if (packageType === 'bundle') {
+      setBookingStep('timing');
+    } else {
+      setBookingStep('form');
+    }
+  };
+
+  const handleTimingSelect = (timing: any) => {
+    setSelectedTiming(timing);
     setBookingStep('form');
   };
 
   const handleFormSubmit = (formData: any) => {
-    setBookingData(formData);
+    setBookingData({ ...formData, timing: selectedTiming });
     if (formData.isGroupBooking) {
       setBookingStep('group');
     } else {
@@ -57,6 +68,7 @@ const BookingFlow = ({ eventData, restaurantData }: BookingFlowProps) => {
           setBookingStep('selection');
           setSelectedPackage(null);
           setBookingData(null);
+          setSelectedTiming(null);
         }}
       />
     );
@@ -75,14 +87,61 @@ const BookingFlow = ({ eventData, restaurantData }: BookingFlowProps) => {
 
   if (bookingStep === 'form' && selectedPackage) {
     return (
-      <BookingForm
-        selectedPackage={selectedPackage}
-        eventData={eventData}
-        restaurantData={restaurantData}
-        bundlePrice={bundlePrice}
-        onSubmit={handleFormSubmit}
-        onBack={() => setBookingStep('selection')}
-      />
+      <div className="space-y-4">
+        {selectedPackage === 'bundle' && selectedTiming && (
+          <CoordinationStatus
+            dinnerTime={selectedTiming.dinnerTime}
+            eventTime={selectedTiming.eventTime}
+            bufferTime={selectedTiming.bufferTime}
+          />
+        )}
+        <BookingForm
+          selectedPackage={selectedPackage}
+          eventData={eventData}
+          restaurantData={restaurantData}
+          bundlePrice={bundlePrice}
+          selectedTiming={selectedTiming}
+          onSubmit={handleFormSubmit}
+          onBack={() => {
+            if (selectedPackage === 'bundle') {
+              setBookingStep('timing');
+            } else {
+              setBookingStep('selection');
+            }
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (bookingStep === 'timing' && selectedPackage === 'bundle') {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center mb-4">
+          <Button variant="ghost" size="sm" onClick={() => setBookingStep('selection')} className="mr-3">
+            ← Back
+          </Button>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Perfect Your Timing</h3>
+            <p className="text-sm text-gray-600">Choose your ideal dinner + event experience</p>
+          </div>
+        </div>
+        
+        <TimingCoordination
+          eventTime={eventData.time || '8:00 PM'}
+          onTimingSelect={handleTimingSelect}
+          selectedTiming={selectedTiming}
+        />
+        
+        {selectedTiming && (
+          <Button 
+            onClick={() => setBookingStep('form')} 
+            className="w-full bg-orange-500 hover:bg-orange-600 py-3"
+          >
+            Continue with {selectedTiming.name}
+          </Button>
+        )}
+      </div>
     );
   }
 

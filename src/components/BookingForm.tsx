@@ -1,21 +1,21 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Users, Clock, Utensils, ArrowLeft, MessageCircle } from 'lucide-react';
+import { Users, Clock, Utensils, ArrowLeft, MessageCircle, CheckCircle } from 'lucide-react';
 
 interface BookingFormProps {
   selectedPackage: 'bundle' | 'event-only';
   eventData: any;
   restaurantData: any;
   bundlePrice: any;
+  selectedTiming?: any;
   onSubmit: (formData: any) => void;
   onBack: () => void;
 }
 
-const BookingForm = ({ selectedPackage, eventData, restaurantData, bundlePrice, onSubmit, onBack }: BookingFormProps) => {
+const BookingForm = ({ selectedPackage, eventData, restaurantData, bundlePrice, selectedTiming, onSubmit, onBack }: BookingFormProps) => {
   const [formData, setFormData] = useState({
     partySize: 2,
     dietaryPreferences: [] as string[],
@@ -58,6 +58,42 @@ const BookingForm = ({ selectedPackage, eventData, restaurantData, bundlePrice, 
           <p className="text-sm text-gray-600">{eventData.name} at {restaurantData.name}</p>
         </div>
       </div>
+
+      {/* Timing Summary for Bundle */}
+      {selectedPackage === 'bundle' && selectedTiming && (
+        <Card className="p-4 bg-green-50 border-green-200">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="font-semibold text-green-900">Your Perfect Timing</h4>
+            <Badge className="bg-green-600 hover:bg-green-700 text-white">
+              <CheckCircle className="h-3 w-3 mr-1" />
+              {selectedTiming.name}
+            </Badge>
+          </div>
+          <div className="grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <div className="flex items-center text-green-700">
+                <Utensils className="h-3 w-3 mr-1" />
+                <span>Dinner</span>
+              </div>
+              <p className="font-medium">{selectedTiming.dinnerTime}</p>
+            </div>
+            <div>
+              <div className="flex items-center text-green-700">
+                <Clock className="h-3 w-3 mr-1" />
+                <span>Buffer</span>
+              </div>
+              <p className="font-medium">{selectedTiming.bufferTime} mins</p>
+            </div>
+            <div>
+              <div className="flex items-center text-green-700">
+                <Clock className="h-3 w-3 mr-1" />
+                <span>Event</span>
+              </div>
+              <p className="font-medium">{selectedTiming.eventTime}</p>
+            </div>
+          </div>
+        </Card>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Party Size */}
