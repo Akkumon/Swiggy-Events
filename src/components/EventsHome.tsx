@@ -1,15 +1,34 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StoryHero from './StoryHero';
 import EnhancedEventCard from './EnhancedEventCard';
+import SmartRecommendations from './SmartRecommendations';
+import SmartFiltering from './SmartFiltering';
 import { Button } from './ui/button';
 import { mockEvents } from '@/data/mockEvents';
 
 const EventsHome = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('events');
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
-  // Enhanced events with story-driven content and community touches
+  // Enhanced events with restaurant context
+  const enhancedEvents = mockEvents.map(event => ({
+    ...event,
+    restaurantName: event.id === 1 ? "Bombay Street Kitchen" : 
+                   event.id === 2 ? "Blue Terrace Restaurant" :
+                   event.id === 3 ? "Green Thumb Bistro" : "Lakeside Cafe",
+    cuisineType: event.id === 1 ? "Street Food" :
+                event.id === 2 ? "Italian" :
+                event.id === 3 ? "Healthy" : "Multi-cuisine",
+    userOrderHistory: event.id === 1 ? 8 : event.id === 2 ? 3 : 0,
+    restaurantRating: event.id === 1 ? 4.5 : event.id === 2 ? 4.3 : event.id === 3 ? 4.6 : 4.2,
+    specialties: event.id === 1 ? ["Vada Pav", "Pav Bhaji"] :
+                event.id === 2 ? ["Pasta", "Wine Selection"] :
+                event.id === 3 ? ["Organic Salads", "Fresh Herbs"] : ["BBQ", "Lake Views"]
+  }));
+
   const featuredEvent = {
     name: "Street Food Festival",
     type: "Food Festival",
@@ -22,7 +41,11 @@ const EventsHome = () => {
     }
   };
 
-  const events = mockEvents;
+  const handleFilterChange = (filters: string[]) => {
+    setActiveFilters(filters);
+    // In a real app, this would filter the events
+    console.log('Applied filters:', filters);
+  };
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -89,6 +112,16 @@ const EventsHome = () => {
               <StoryHero event={featuredEvent} />
             </div>
 
+            {/* Smart Recommendations */}
+            <div className="mb-6">
+              <SmartRecommendations onEventClick={(eventId) => navigate(`/event/${eventId}`)} />
+            </div>
+
+            {/* Smart Filtering */}
+            <div className="mb-6">
+              <SmartFiltering onFilterChange={handleFilterChange} />
+            </div>
+
             {/* Human-Curated Swiggy Pick Section */}
             <div className="mb-6">
               <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 md:p-6 border-l-4 border-purple-400">
@@ -100,20 +133,9 @@ const EventsHome = () => {
               </div>
             </div>
 
-            {/* Community Stats with Human Touch */}
-            <div className="mb-6">
-              <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-4 md:p-6">
-                <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-2 tracking-tight">Your Neighborhood Pulse</h2>
-                <p className="text-sm md:text-base text-gray-600 mb-2">12 events happening in Koramangala this week, curated by your local community</p>
-                <div className="text-xs md:text-sm text-orange-600 font-medium">
-                  ✨ 89% of attendees say they discovered their new favorite spot through our events
-                </div>
-              </div>
-            </div>
-
             {/* Enhanced Events Feed */}
             <div className="grid-responsive">
-              {events.map((event) => (
+              {enhancedEvents.map((event) => (
                 <EnhancedEventCard
                   key={event.id}
                   event={event}

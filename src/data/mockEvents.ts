@@ -1,3 +1,4 @@
+
 export interface Event {
   id: number;
   name: string;
@@ -13,6 +14,11 @@ export interface Event {
   editorsPick?: boolean;
   editorNote?: string;
   organizer?: string;
+  restaurantName?: string;
+  cuisineType?: string;
+  userOrderHistory?: number;
+  restaurantRating?: number;
+  specialties?: string[];
 }
 
 export const mockEvents: Event[] = [
@@ -30,7 +36,12 @@ export const mockEvents: Event[] = [
     hostNote: "Come hungry, leave happy! - Chef Pradeep",
     editorsPick: true,
     editorNote: "This week I'm loving the energy and authentic flavors—it's community dining at its finest!",
-    organizer: "Koramangala Community Hub"
+    organizer: "Koramangala Community Hub",
+    restaurantName: "Bombay Street Kitchen",
+    cuisineType: "Street Food",
+    userOrderHistory: 8,
+    restaurantRating: 4.5,
+    specialties: ["Vada Pav", "Pav Bhaji", "Mumbai Chaat"]
   },
   {
     id: 2,
@@ -43,7 +54,12 @@ export const mockEvents: Event[] = [
     attendees: 45,
     type: "Music & Dining",
     userTestimonial: "The perfect date night—great music, even better food, and that candlelit ambiance!",
-    hostNote: "Every song tells a story. - Maya & The Blue Notes"
+    hostNote: "Every song tells a story. - Maya & The Blue Notes",
+    restaurantName: "Blue Terrace Restaurant",
+    cuisineType: "Italian",
+    userOrderHistory: 3,
+    restaurantRating: 4.3,
+    specialties: ["Wood-fired Pizza", "Tiramisu", "Wine Selection"]
   },
   {
     id: 3,
@@ -56,7 +72,12 @@ export const mockEvents: Event[] = [
     attendees: 89,
     type: "Workshop",
     userTestimonial: "Learned so much and made new friends! Plus the fresh mint tea was divine.",
-    hostNote: "Growing food, growing community. - Green Thumb Collective"
+    hostNote: "Growing food, growing community. - Green Thumb Collective",
+    restaurantName: "Green Thumb Bistro",
+    cuisineType: "Healthy",
+    userOrderHistory: 0,
+    restaurantRating: 4.6,
+    specialties: ["Organic Salads", "Fresh Herb Teas", "Sustainable Bowls"]
   },
   {
     id: 4,
@@ -70,6 +91,11 @@ export const mockEvents: Event[] = [
     type: "Community",
     userTestimonial: "Perfect family day out! Kids loved the boat rides, we loved the dosa stalls.",
     hostNote: "Where families create memories. - Lakeside Events Team",
-    editorsPick: false
+    editorsPick: false,
+    restaurantName: "Lakeside Cafe",
+    cuisineType: "Multi-cuisine",
+    userOrderHistory: 1,
+    restaurantRating: 4.2,
+    specialties: ["Fresh Fish", "Lake Views", "Family Platters"]
   }
 ]; 
