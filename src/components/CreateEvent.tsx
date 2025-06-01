@@ -9,6 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { useNavigate } from 'react-router-dom';
 import AIEventHelper from './AIEventHelper';
+import SmartPricingIntelligence from './SmartPricingIntelligence';
+import CustomerTargetingTools from './CustomerTargetingTools';
+import AIContentShowcase from './AIContentShowcase';
 import { restaurantImages } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
 
@@ -193,32 +196,25 @@ const CreateEvent = () => {
           >
             ← Back
           </Button>
-          <h1 className="text-lg font-semibold text-gray-900">Create New Event</h1>
+          <h1 className="text-lg font-semibold text-gray-900">AI-Powered Event Creation</h1>
         </div>
       </div>
 
       <div className="px-4 py-6">
-        {/* Introduction */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Welcome to Event Creation</h2>
-          <p className="text-gray-600 text-sm">
-            Create engaging local events and connect with your community. Add participating restaurants to make your event even more appealing.
+        {/* Hero Section */}
+        <Card className="p-6 mb-6 bg-gradient-to-r from-orange-500 to-red-500 text-white">
+          <h2 className="text-xl font-semibold mb-2">Transform Your Ideas Into Successful Events</h2>
+          <p className="text-orange-100 text-sm">
+            Our AI-powered platform helps restaurants create, price, and promote events that drive real business results.
           </p>
         </Card>
 
-        {/* AI Helper */}
+        {/* AI Content Generator - Prominent Section */}
         <div className="mb-6">
-          <AIEventHelper 
-            onGenerateTitle={handleGenerateTitle}
-            onGenerateDescription={handleGenerateDescription}
-            onSuggestVendors={suggestVendors}
-            onGenerateMarketing={handleGenerateMarketing}
-            isLoading={isLoading}
-            eventData={{
-              eventType: formData.eventType,
-              location: formData.location,
-              eventName: formData.eventName
-            }}
+          <AIContentShowcase 
+            eventType={formData.eventType || 'dining experience'}
+            cuisine={formData.eventType || 'culinary'}
+            location={formData.location || 'your location'}
           />
         </div>
 
@@ -229,8 +225,26 @@ const CreateEvent = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Event Details</h3>
             
             <div className="space-y-4">
+              {/* Event Name with AI suggestion */}
               <div>
-                <Label htmlFor="eventName">Event Name *</Label>
+                <div className="flex items-center justify-between mb-1">
+                  <Label htmlFor="eventName">Event Name *</Label>
+                  {formData.eventType && formData.location && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        // Auto-generate title based on selections
+                        const generatedTitle = `${formData.eventType} Experience at ${formData.location}`;
+                        setFormData({ ...formData, eventName: generatedTitle });
+                      }}
+                      className="text-xs text-orange-600 hover:text-orange-700"
+                    >
+                      Generate Title ✨
+                    </Button>
+                  )}
+                </div>
                 <Input
                   id="eventName"
                   value={formData.eventName}
@@ -350,6 +364,38 @@ const CreateEvent = () => {
             </div>
           </Card>
 
+          {/* Smart Pricing Intelligence */}
+          {formData.eventType && formData.location && (
+            <SmartPricingIntelligence 
+              eventType={formData.eventType}
+              location={formData.location}
+            />
+          )}
+
+          {/* Customer Targeting Tools */}
+          {formData.eventType && (
+            <CustomerTargetingTools 
+              eventType={formData.eventType}
+              cuisine={formData.eventType}
+            />
+          )}
+
+          {/* AI Assistant Section */}
+          <div className="mb-6">
+            <AIEventHelper 
+              onGenerateTitle={handleGenerateTitle}
+              onGenerateDescription={handleGenerateDescription}
+              onSuggestVendors={suggestVendors}
+              onGenerateMarketing={handleGenerateMarketing}
+              isLoading={isLoading}
+              eventData={{
+                eventType: formData.eventType,
+                location: formData.location,
+                eventName: formData.eventName
+              }}
+            />
+          </div>
+
           {/* Food Integration */}
           <Card className="p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Food Integration</h3>
@@ -412,13 +458,32 @@ const CreateEvent = () => {
             )}
           </Card>
 
+          {/* Success Stories Preview */}
+          <Card className="p-6 bg-green-50 border-green-200">
+            <h3 className="text-lg font-semibold text-green-900 mb-4">Success Stories</h3>
+            <div className="space-y-3">
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <p className="text-sm text-green-800 font-medium">
+                  "AI-generated event descriptions increased our bookings by 40%"
+                </p>
+                <p className="text-xs text-green-600 mt-1">- Cafe Mocha, Bangalore</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <p className="text-sm text-green-800 font-medium">
+                  "Smart pricing helped us optimize revenue while keeping events full"
+                </p>
+                <p className="text-xs text-green-600 mt-1">- Spice Garden, Mumbai</p>
+              </div>
+            </div>
+          </Card>
+
           <div className="flex justify-end">
             <Button 
               type="submit" 
               disabled={isSubmitting}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600"
             >
-              {isSubmitting ? "Creating Event..." : "Create Event"}
+              {isSubmitting ? "Creating Event..." : "Create AI-Powered Event"}
             </Button>
           </div>
         </form>
