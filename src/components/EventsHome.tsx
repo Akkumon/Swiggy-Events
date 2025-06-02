@@ -43,7 +43,6 @@ const EventsHome = () => {
 
   const handleFilterChange = (filters: string[]) => {
     setActiveFilters(filters);
-    // In a real app, this would filter the events
     console.log('Applied filters:', filters);
   };
 
