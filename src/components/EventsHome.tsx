@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
@@ -13,12 +12,16 @@ import {
   BreadcrumbSeparator 
 } from './ui/breadcrumb';
 import EnhancedEventCard from './EnhancedEventCard';
+import RecommendationCarousel from './RecommendationCarousel';
+import SmartFiltering from './SmartFiltering';
 import { mockEvents } from '@/data/mockEvents';
-import { ChevronRight, Star, Clock, MapPin, Heart } from 'lucide-react';
+import { ChevronRight, Star, Clock, MapPin, Heart, Map } from 'lucide-react';
 
 const EventsHome = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('discover');
+  const [showMapView, setShowMapView] = useState(false);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   // Mock user dining history with events
   const userFavoriteRestaurants = [
@@ -78,6 +81,15 @@ const EventsHome = () => {
                 event.id === 2 ? ["Pasta", "Wine Selection"] :
                 event.id === 3 ? ["Organic Salads", "Fresh Herbs"] : ["BBQ", "Lake Views"]
   }));
+
+  const handleFilterChange = (filters: string[]) => {
+    setActiveFilters(filters);
+    console.log('Applied filters:', filters);
+  };
+
+  const handleMapToggle = () => {
+    setShowMapView(!showMapView);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -169,6 +181,38 @@ const EventsHome = () => {
       <div className="container-responsive section-padding">
         {activeTab === 'discover' && (
           <>
+            {/* Smart Recommendation Carousel - Top Priority */}
+            <div className="mb-8">
+              <RecommendationCarousel onEventClick={(eventId) => navigate(`/event/${eventId}`)} />
+            </div>
+
+            {/* Smart Filtering Section */}
+            <div className="mb-8">
+              <SmartFiltering 
+                onFilterChange={handleFilterChange}
+                showMapView={showMapView}
+                onMapToggle={handleMapToggle}
+              />
+            </div>
+
+            {/* Map View Toggle */}
+            {showMapView && (
+              <div className="mb-8">
+                <Card className="p-6 text-center bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+                  <Map className="h-12 w-12 text-blue-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-blue-900 mb-2">Map View Coming Soon</h3>
+                  <p className="text-blue-700 mb-4">
+                    Interactive map with event locations, distance calculations, and route suggestions
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    <Badge className="bg-blue-100 text-blue-700">Distance-based filtering</Badge>
+                    <Badge className="bg-blue-100 text-blue-700">Travel time estimates</Badge>
+                    <Badge className="bg-blue-100 text-blue-700">Route optimization</Badge>
+                  </div>
+                </Card>
+              </div>
+            )}
+
             {/* Events at Restaurants You Love - Primary Section */}
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-4">

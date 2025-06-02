@@ -1,57 +1,64 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Filter, Users, MapPin, Star, Clock } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { 
+  MapPin, 
+  Clock, 
+  Heart, 
+  Zap, 
+  Calendar, 
+  Users, 
+  Map,
+  Filter,
+  X
+} from 'lucide-react';
 
 interface SmartFilteringProps {
   onFilterChange: (filters: any) => void;
+  showMapView: boolean;
+  onMapToggle: () => void;
 }
 
-const SmartFiltering = ({ onFilterChange }: SmartFilteringProps) => {
+const SmartFiltering = ({ onFilterChange, showMapView, onMapToggle }: SmartFilteringProps) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [showAllFilters, setShowAllFilters] = useState(false);
 
-  const personalizedFilters = [
+  const smartFilters = [
     {
-      id: 'visited_restaurants',
-      label: 'Events at restaurants you\'ve visited',
-      count: 8,
-      icon: <Star className="h-3 w-3" />
+      category: "Based on your behavior",
+      filters: [
+        { id: "italian-lover", label: "More Italian events", icon: Heart, color: "text-red-500 bg-red-50 border-red-200" },
+        { id: "frequent-diner", label: "At restaurants you visit", icon: Users, color: "text-green-500 bg-green-50 border-green-200" },
+        { id: "weekend-explorer", label: "Weekend experiences", icon: Calendar, color: "text-blue-500 bg-blue-50 border-blue-200" }
+      ]
     },
     {
-      id: 'italian_live_music',
-      label: 'Italian restaurants with live music',
-      count: 3,
-      icon: <Filter className="h-3 w-3" />
+      category: "Location & Distance",
+      filters: [
+        { id: "walking-distance", label: "Within walking distance", icon: MapPin, color: "text-orange-500 bg-orange-50 border-orange-200", subtitle: "< 500m" },
+        { id: "quick-commute", label: "Quick commute", icon: MapPin, color: "text-orange-500 bg-orange-50 border-orange-200", subtitle: "< 2km" },
+        { id: "along-route", label: "Along your usual routes", icon: MapPin, color: "text-orange-500 bg-orange-50 border-orange-200" }
+      ]
     },
     {
-      id: 'group_of_4',
-      label: 'Perfect for your usual group of 4',
-      count: 12,
-      icon: <Users className="h-3 w-3" />
+      category: "Mood & Occasion",
+      filters: [
+        { id: "relaxing-evening", label: "Relaxing evening", icon: Heart, color: "text-purple-500 bg-purple-50 border-purple-200" },
+        { id: "high-energy", label: "High-energy night", icon: Zap, color: "text-yellow-500 bg-yellow-50 border-yellow-200" },
+        { id: "date-night", label: "Perfect for date night", icon: Heart, color: "text-pink-500 bg-pink-50 border-pink-200" },
+        { id: "celebration", label: "Great for celebrations", icon: Users, color: "text-indigo-500 bg-indigo-50 border-indigo-200" }
+      ]
     },
     {
-      id: 'walking_distance',
-      label: 'Walking distance from your location',
-      count: 6,
-      icon: <MapPin className="h-3 w-3" />
-    },
-    {
-      id: 'evening_events',
-      label: 'Evening events (your preferred time)',
-      count: 15,
-      icon: <Clock className="h-3 w-3" />
+      category: "Timing",
+      filters: [
+        { id: "tonight", label: "Tonight", icon: Clock, color: "text-red-500 bg-red-50 border-red-200" },
+        { id: "this-weekend", label: "This weekend", icon: Calendar, color: "text-blue-500 bg-blue-50 border-blue-200" },
+        { id: "after-work", label: "After work hours", icon: Clock, color: "text-gray-500 bg-gray-50 border-gray-200", subtitle: "6 PM onwards" }
+      ]
     }
-  ];
-
-  const quickFilters = [
-    'Food Available',
-    'Tonight',
-    'This Weekend',
-    'Free Entry',
-    'Live Music',
-    'Outdoor Seating'
   ];
 
   const toggleFilter = (filterId: string) => {
@@ -63,100 +70,165 @@ const SmartFiltering = ({ onFilterChange }: SmartFilteringProps) => {
     onFilterChange(newFilters);
   };
 
+  const clearAllFilters = () => {
+    setActiveFilters([]);
+    onFilterChange([]);
+  };
+
+  const getVisibleCategories = () => {
+    return showAllFilters ? smartFilters : smartFilters.slice(0, 2);
+  };
+
   return (
     <div className="space-y-4">
-      {/* Personalized Filters */}
-      <Card className="p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Filter className="h-4 w-4 text-orange-500" />
-          <h3 className="font-medium text-gray-900">Smart Filters for You</h3>
+      {/* Filter Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4 text-gray-600" />
+          <h3 className="font-medium text-gray-900">Smart Filters</h3>
+          {activeFilters.length > 0 && (
+            <Badge variant="outline" className="text-orange-600 border-orange-200">
+              {activeFilters.length} active
+            </Badge>
+          )}
         </div>
         
-        <div className="space-y-2">
-          {personalizedFilters.map((filter) => (
-            <Button
-              key={filter.id}
-              variant={activeFilters.includes(filter.id) ? "default" : "outline"}
-              size="sm"
-              onClick={() => toggleFilter(filter.id)}
-              className={`w-full justify-between text-left h-auto py-2 px-3 ${
-                activeFilters.includes(filter.id) 
-                  ? 'bg-orange-500 hover:bg-orange-600' 
-                  : 'hover:bg-orange-50 border-gray-200'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                {filter.icon}
-                <span className="text-sm">{filter.label}</span>
-              </div>
-              <Badge 
-                variant="secondary" 
-                className={`text-xs ${
-                  activeFilters.includes(filter.id) 
-                    ? 'bg-orange-600 text-white' 
-                    : 'bg-gray-100 text-gray-600'
-                }`}
-              >
-                {filter.count}
-              </Badge>
-            </Button>
-          ))}
-        </div>
-      </Card>
-
-      {/* Quick Filters */}
-      <div>
-        <h4 className="font-medium text-gray-900 mb-2 text-sm">Quick Filters</h4>
-        <div className="flex flex-wrap gap-2">
-          {quickFilters.map((filter) => (
-            <Button
-              key={filter}
-              variant={activeFilters.includes(filter) ? "default" : "outline"}
-              size="sm"
-              onClick={() => toggleFilter(filter)}
-              className={`text-xs ${
-                activeFilters.includes(filter) 
-                  ? 'bg-orange-500 hover:bg-orange-600' 
-                  : 'hover:bg-orange-50'
-              }`}
-            >
-              {filter}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      {/* Active Filters Summary */}
-      {activeFilters.length > 0 && (
-        <div className="bg-orange-50 rounded-lg p-3 border border-orange-200">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-orange-900">
-              {activeFilters.length} filter{activeFilters.length > 1 ? 's' : ''} applied
-            </span>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onMapToggle}
+            className={showMapView ? "bg-orange-50 border-orange-200 text-orange-600" : ""}
+          >
+            <Map className="h-4 w-4 mr-1" />
+            {showMapView ? "List View" : "Map View"}
+          </Button>
+          
+          {activeFilters.length > 0 && (
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {
-                setActiveFilters([]);
-                onFilterChange([]);
-              }}
-              className="text-orange-600 hover:text-orange-700 text-xs"
+              onClick={clearAllFilters}
+              className="text-gray-500"
             >
-              Clear all
+              <X className="h-4 w-4 mr-1" />
+              Clear
             </Button>
-          </div>
-          <div className="flex flex-wrap gap-1">
-            {activeFilters.map((filter) => (
-              <Badge 
-                key={filter} 
-                variant="outline" 
-                className="text-orange-700 border-orange-300 text-xs"
-              >
-                {personalizedFilters.find(f => f.id === filter)?.label || filter}
-              </Badge>
-            ))}
-          </div>
+          )}
         </div>
+      </div>
+
+      {/* Smart Suggestions Based on Behavior */}
+      <Card className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+          <span className="text-sm font-medium text-blue-900">Smart Suggestion</span>
+        </div>
+        <p className="text-sm text-blue-700 mb-2">
+          Based on your dining pattern, you typically book events on weekends around Italian restaurants
+        </p>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => toggleFilter("weekend-explorer")}
+            className="text-xs bg-white border-blue-200 text-blue-600 hover:bg-blue-50"
+          >
+            Apply Weekend Filter
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => toggleFilter("italian-lover")}
+            className="text-xs bg-white border-blue-200 text-blue-600 hover:bg-blue-50"
+          >
+            Show Italian Events
+          </Button>
+        </div>
+      </Card>
+
+      {/* Filter Categories */}
+      <div className="space-y-4">
+        {getVisibleCategories().map((category) => (
+          <div key={category.category}>
+            <h4 className="text-sm font-medium text-gray-700 mb-2">{category.category}</h4>
+            <div className="grid grid-cols-1 gap-2">
+              {category.filters.map((filter) => {
+                const IconComponent = filter.icon;
+                const isActive = activeFilters.includes(filter.id);
+                
+                return (
+                  <Button
+                    key={filter.id}
+                    variant="outline"
+                    onClick={() => toggleFilter(filter.id)}
+                    className={`justify-start h-auto p-3 text-left ${
+                      isActive 
+                        ? `${filter.color} border-2` 
+                        : 'border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <IconComponent className={`h-4 w-4 ${isActive ? filter.color.split(' ')[0] : 'text-gray-500'}`} />
+                      <div className="flex-1">
+                        <p className={`text-sm font-medium ${isActive ? filter.color.split(' ')[0] : 'text-gray-900'}`}>
+                          {filter.label}
+                        </p>
+                        {filter.subtitle && (
+                          <p className="text-xs text-gray-500">{filter.subtitle}</p>
+                        )}
+                      </div>
+                      {isActive && (
+                        <div className={`w-2 h-2 rounded-full ${filter.color.split(' ')[0].replace('text-', 'bg-')}`} />
+                      )}
+                    </div>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Show More/Less Toggle */}
+      <Button
+        variant="ghost"
+        onClick={() => setShowAllFilters(!showAllFilters)}
+        className="w-full text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+      >
+        {showAllFilters ? 'Show Less Filters' : `Show More Filters (${smartFilters.length - 2} more categories)`}
+      </Button>
+
+      {/* Applied Filters Summary */}
+      {activeFilters.length > 0 && (
+        <Card className="p-3 bg-gray-50">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">Active Filters:</h4>
+          <div className="flex flex-wrap gap-2">
+            {activeFilters.map((filterId) => {
+              const filter = smartFilters
+                .flatMap(cat => cat.filters)
+                .find(f => f.id === filterId);
+              
+              return filter ? (
+                <Badge
+                  key={filterId}
+                  variant="outline"
+                  className="text-xs bg-white"
+                >
+                  {filter.label}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => toggleFilter(filterId)}
+                    className="ml-1 h-3 w-3 p-0 hover:bg-red-100"
+                  >
+                    <X className="h-2 w-2" />
+                  </Button>
+                </Badge>
+              ) : null;
+            })}
+          </div>
+        </Card>
       )}
     </div>
   );
