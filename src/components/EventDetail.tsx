@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { MapPin, Share, ArrowDown, Star, ShoppingBag, Clock, Users as UsersIcon } from 'lucide-react';
+import { MapPin, Share, ArrowDown, Star, ShoppingBag, Clock, Users as UsersIcon, Gift, Wallet, Crown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +18,18 @@ const EventDetail = () => {
 
   const eventData = mockEvents.find(event => event.id === eventId);
 
-  // Enhanced restaurant data with user relationship
+  // Enhanced user data with Swiggy ecosystem integration
+  const userProfile = {
+    swiggyOne: true,
+    tier: "Gold",
+    walletBalance: 450,
+    loyaltyPoints: 2840,
+    lastDeliveryOrder: "2 days ago",
+    totalOrders: 127,
+    favoriteRestaurants: ["Bombay Street Kitchen", "Blue Terrace", "Toscano"]
+  };
+
+  // Enhanced restaurant data with ecosystem integration
   const primaryRestaurant = {
     name: "Bombay Street Kitchen",
     cuisine: "Street Food • Mumbai Style",
@@ -29,10 +41,13 @@ const EventDetail = () => {
     specialties: ["Authentic Mumbai Street Food", "Homemade Chutneys", "Fresh Daily Specials"],
     image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=100&h=100&fit=crop",
     specialOffer: "20% off for event attendees",
+    swiggyOneDiscount: "Extra 10% off with Swiggy One",
+    deliveryAvailable: true,
+    avgDeliveryPrice: "₹180 for two",
     menuHighlights: [
-      { name: "Signature Vada Pav", price: "₹45", description: "Your usual favorite!" },
-      { name: "Pav Bhaji Combo", price: "₹120", description: "You ordered this last time" },
-      { name: "Mumbai Special Thali", price: "₹180", description: "Perfect for sharing" }
+      { name: "Signature Vada Pav", price: "₹45", description: "Your usual favorite!", loyaltyPoints: 15 },
+      { name: "Pav Bhaji Combo", price: "₹120", description: "You ordered this last time", loyaltyPoints: 40 },
+      { name: "Mumbai Special Thali", price: "₹180", description: "Perfect for sharing", loyaltyPoints: 60 }
     ]
   };
 
@@ -92,26 +107,55 @@ const EventDetail = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
+      {/* Header with Swiggy Integration */}
       <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
-        <div className="px-4 py-3 flex items-center">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => navigate(-1)}
-            className="mr-3"
-          >
-            ← Back
-          </Button>
-          <h1 className="text-lg font-semibold text-gray-900 flex-1">Event Details</h1>
-          <Button variant="ghost" size="sm">
-            <Share className="h-4 w-4" />
-          </Button>
+        <div className="px-4 py-3">
+          <div className="flex items-center mb-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate(-1)}
+              className="mr-3"
+            >
+              ← Back
+            </Button>
+            <h1 className="text-lg font-semibold text-gray-900 flex-1">Event Details</h1>
+            <Button variant="ghost" size="sm">
+              <Share className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          {/* Swiggy Ecosystem Navigation */}
+          <div className="flex items-center gap-2 text-xs text-gray-600">
+            <span className="text-orange-600 font-medium">Swiggy</span>
+            <span>•</span>
+            <span>Food Delivery</span>
+            <span>•</span>
+            <span>Instamart</span>
+            <span>•</span>
+            <span className="text-orange-600 font-medium">Events</span>
+          </div>
         </div>
       </div>
 
+      {/* Swiggy One Benefits Banner */}
+      {userProfile.swiggyOne && (
+        <div className="mx-4 mt-4">
+          <Card className="p-3 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+            <div className="flex items-center gap-2">
+              <Crown className="h-4 w-4 text-purple-600" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-purple-900">Swiggy One {userProfile.tier} Benefits Apply</p>
+                <p className="text-xs text-purple-700">Free delivery + Extra discounts + Priority booking</p>
+              </div>
+              <Badge className="bg-purple-600 text-white text-xs">Active</Badge>
+            </div>
+          </Card>
+        </div>
+      )}
+
       {/* Event Banner */}
-      <div className="relative h-64 bg-gray-200">
+      <div className="relative h-64 bg-gray-200 mx-4 mt-4 rounded-lg overflow-hidden">
         <img
           src={eventData.image}
           alt={eventData.name}
@@ -131,9 +175,9 @@ const EventDetail = () => {
       </div>
 
       <div className="px-4 py-6 space-y-6">
-        {/* Restaurant Relationship Highlight */}
-        <Card className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
-          <div className="flex items-start gap-3">
+        {/* Cross-Service Integration Card */}
+        <Card className="p-4 bg-gradient-to-r from-orange-50 to-red-50 border-orange-200">
+          <div className="flex items-start gap-3 mb-3">
             <img
               src={primaryRestaurant.image}
               alt={primaryRestaurant.name}
@@ -149,25 +193,78 @@ const EventDetail = () => {
               </div>
               <p className="text-sm text-gray-600 mb-2">{primaryRestaurant.cuisine}</p>
               <div className="flex items-center gap-2 mb-2">
-                <Badge className="bg-green-600 hover:bg-green-700 text-white text-xs">
-                  ✓ You've ordered here {primaryRestaurant.userOrderHistory} times
+                <Badge className="bg-green-600 text-white text-xs">
+                  ✓ {primaryRestaurant.userOrderHistory} orders
                 </Badge>
                 <Badge variant="outline" className="text-green-600 border-green-200 text-xs">
                   Last order: {primaryRestaurant.lastOrderDate}
                 </Badge>
               </div>
-              <p className="text-xs text-gray-500">
-                Your favorites: {primaryRestaurant.favoriteItems.join(', ')}
-              </p>
             </div>
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
+          </div>
+          
+          {/* Cross-Service Actions */}
+          <div className="grid grid-cols-2 gap-3">
+            <Button className="bg-orange-500 hover:bg-orange-600 text-sm">
               <ShoppingBag className="h-4 w-4 mr-2" />
-              Quick Order
+              Order Delivery
             </Button>
+            <Button variant="outline" className="border-orange-200 text-orange-600 hover:bg-orange-50 text-sm">
+              <Gift className="h-4 w-4 mr-2" />
+              View Menu
+            </Button>
+          </div>
+          
+          {/* Unified Benefits */}
+          <div className="mt-3 p-3 bg-white rounded-lg border">
+            <div className="flex items-center justify-between text-sm">
+              <div>
+                <p className="font-medium text-gray-900">Combined Benefits</p>
+                <p className="text-xs text-gray-600">Event booking + Food delivery</p>
+              </div>
+              <div className="text-right">
+                <p className="text-lg font-bold text-orange-600">₹95 saved</p>
+                <p className="text-xs text-gray-500">vs separate bookings</p>
+              </div>
+            </div>
           </div>
         </Card>
 
-        {/* Event Info */}
+        {/* Unified Wallet & Loyalty */}
+        <Card className="p-4">
+          <h3 className="font-semibold text-gray-900 mb-3">Payment & Rewards</h3>
+          
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="flex items-center gap-2">
+              <Wallet className="h-5 w-5 text-blue-600" />
+              <div>
+                <p className="text-sm font-medium text-gray-900">Swiggy Money</p>
+                <p className="text-xs text-gray-600">₹{userProfile.walletBalance} available</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Gift className="h-5 w-5 text-purple-600" />
+              <div>
+                <p className="text-sm font-medium text-gray-900">Loyalty Points</p>
+                <p className="text-xs text-gray-600">{userProfile.loyaltyPoints} points</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gray-50 rounded-lg p-3">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm font-medium text-gray-900">This booking earns</p>
+              <Badge variant="outline" className="text-orange-600 border-orange-200">
+                250 points
+              </Badge>
+            </div>
+            <p className="text-xs text-gray-600">
+              Valid across all Swiggy services • Redeem for food orders, discounts & more
+            </p>
+          </div>
+        </Card>
+
+        {/* Event Info with Cross-Service Context */}
         <Card className="p-4">
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
@@ -188,9 +285,14 @@ const EventDetail = () => {
               <p className="text-gray-900">{eventData.description}</p>
             </div>
             
-            <div>
-              <p className="text-sm text-gray-600">Organized by</p>
-              <p className="font-medium text-gray-900">{eventData.organizer || 'Community Organizer'}</p>
+            <div className="bg-blue-50 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <ShoppingBag className="h-4 w-4 text-blue-600" />
+                <p className="text-sm font-medium text-blue-900">Food Delivery Available</p>
+              </div>
+              <p className="text-xs text-blue-700">
+                Order from {primaryRestaurant.name} directly to the event venue • {primaryRestaurant.deliveryTime} delivery
+              </p>
             </div>
           </div>
         </Card>
@@ -198,12 +300,12 @@ const EventDetail = () => {
         {/* New Bundled Booking Flow */}
         <BookingFlow eventData={eventData} restaurantData={primaryRestaurant} />
 
-        {/* Restaurant Menu Highlights */}
+        {/* Restaurant Menu with Ecosystem Benefits */}
         <Card className="p-4">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">Menu Highlights from {primaryRestaurant.name}</h3>
+            <h3 className="font-semibold text-gray-900">Menu from {primaryRestaurant.name}</h3>
             <Badge variant="outline" className="text-orange-600 border-orange-200">
-              Based on your orders
+              Your favorites
             </Badge>
           </div>
           
@@ -213,11 +315,21 @@ const EventDetail = () => {
                 <div>
                   <p className="font-medium text-gray-900">{item.name}</p>
                   <p className="text-sm text-gray-600">{item.description}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="outline" className="text-purple-600 border-purple-200 text-xs">
+                      +{item.loyaltyPoints} points
+                    </Badge>
+                    {userProfile.swiggyOne && (
+                      <Badge className="bg-purple-600 text-white text-xs">
+                        One member price
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <div className="text-right">
                   <p className="font-medium text-gray-900">{item.price}</p>
                   <Button size="sm" variant="outline" className="mt-1 text-xs">
-                    Add to Order
+                    Add to Cart
                   </Button>
                 </div>
               </div>
@@ -227,11 +339,38 @@ const EventDetail = () => {
           <div className="mt-4 p-3 bg-orange-50 rounded-lg">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-medium text-orange-900">Special Event Pricing</h4>
-                <p className="text-sm text-orange-700">{primaryRestaurant.specialOffer}</p>
+                <h4 className="font-medium text-orange-900">Bundle & Save</h4>
+                <p className="text-sm text-orange-700">{primaryRestaurant.swiggyOneDiscount} + Event discount</p>
               </div>
               <Button className="bg-orange-500 hover:bg-orange-600">
-                View Full Menu
+                Order to Event
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        {/* Unified Order History */}
+        <Card className="p-4">
+          <h3 className="font-semibold text-gray-900 mb-3">Your History with {primaryRestaurant.name}</h3>
+          
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div>
+                <p className="font-medium text-gray-900">Food Delivery</p>
+                <p className="text-sm text-gray-600">{primaryRestaurant.userOrderHistory} orders • Last: {primaryRestaurant.lastOrderDate}</p>
+              </div>
+              <Button size="sm" variant="outline">
+                Reorder
+              </Button>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+              <div>
+                <p className="font-medium text-gray-900">Events & Dining</p>
+                <p className="text-sm text-gray-600">2 events attended • Great experience</p>
+              </div>
+              <Button size="sm" variant="outline">
+                View History
               </Button>
             </div>
           </div>
