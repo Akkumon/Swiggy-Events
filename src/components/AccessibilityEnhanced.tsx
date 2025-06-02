@@ -47,11 +47,28 @@ const AccessibilityEnhanced: React.FC<AccessibilityEnhancedProps> = ({
   }, [highContrast]);
 
   const accessibilityClasses = `
-    ${isHighContrast ? 'high-contrast' : ''}
     ${fontSize === 'large' ? 'text-lg' : fontSize === 'xl' ? 'text-xl' : ''}
     ${focusVisible ? 'focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2' : ''}
     transition-colors duration-200
+    ${isHighContrast ? 'high-contrast-mode' : ''}
   `;
+
+  // Apply high contrast styles dynamically
+  useEffect(() => {
+    if (isHighContrast) {
+      document.documentElement.style.setProperty('--text-primary', '#000000');
+      document.documentElement.style.setProperty('--text-secondary', '#333333');
+      document.documentElement.style.setProperty('--bg-primary', '#ffffff');
+      document.documentElement.style.setProperty('--bg-secondary', '#f5f5f5');
+      document.documentElement.style.setProperty('--border-color', '#000000');
+    } else {
+      document.documentElement.style.removeProperty('--text-primary');
+      document.documentElement.style.removeProperty('--text-secondary');
+      document.documentElement.style.removeProperty('--bg-primary');
+      document.documentElement.style.removeProperty('--bg-secondary');
+      document.documentElement.style.removeProperty('--border-color');
+    }
+  }, [isHighContrast]);
 
   return (
     <div
@@ -61,30 +78,6 @@ const AccessibilityEnhanced: React.FC<AccessibilityEnhancedProps> = ({
       tabIndex={tabIndex}
     >
       {children}
-      
-      <style jsx>{`
-        .high-contrast {
-          --text-primary: #000000;
-          --text-secondary: #333333;
-          --bg-primary: #ffffff;
-          --bg-secondary: #f5f5f5;
-          --border-color: #000000;
-        }
-        
-        .high-contrast * {
-          border-color: var(--border-color) !important;
-          color: var(--text-primary) !important;
-        }
-        
-        .high-contrast .bg-gray-50 {
-          background-color: var(--bg-primary) !important;
-        }
-        
-        .high-contrast .bg-white {
-          background-color: var(--bg-primary) !important;
-          border: 2px solid var(--border-color) !important;
-        }
-      `}</style>
     </div>
   );
 };
