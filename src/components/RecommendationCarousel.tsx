@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,11 +18,11 @@ interface RecommendationCarouselProps {
 const RecommendationCarousel = ({ onEventClick }: RecommendationCarouselProps) => {
   const recommendations = [
     {
-      id: 8,
-      title: "Rooftop Jazz & Wine",
-      venue: "Skyline Lounge",
-      image: "https://images.unsplash.com/photo-1574391884720-bbc30de1fba8?w=300&h=150&fit=crop",
-      time: "Tonight, 8:00 PM",
+      id: 2, // Changed from 8 to existing event ID
+      title: "Live Jazz & Dinner",
+      venue: "Blue Terrace Restaurant",
+      image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=300&h=150&fit=crop",
+      time: "Tomorrow, 7:30 PM",
       distance: "1.2 km away",
       reason: "Because you love jazz and wine tastings",
       socialProof: "3 friends are going",
@@ -33,36 +32,36 @@ const RecommendationCarousel = ({ onEventClick }: RecommendationCarouselProps) =
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
       ],
       tags: ["Popular with your network", "Perfect for date night"],
-      attendees: 67,
+      attendees: 45,
       price: "₹2,500 for two"
     },
     {
-      id: 9,
-      title: "Street Food Carnival",
-      venue: "Forum Mall Plaza",
+      id: 1, // Changed from 9 to existing event ID
+      title: "Street Food Festival",
+      venue: "Central Park, Koramangala",
       image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=300&h=150&fit=crop",
-      time: "Tomorrow, 6:00 PM",
+      time: "Today, 6:00 PM",
       distance: "800 m away",
-      reason: "Based on your 12 street food orders",
+      reason: "Based on your 8 street food orders",
       socialProof: "Popular with people like you",
       networkActivity: "47 people in your area went to similar events",
       tags: ["Great for groups", "Family friendly"],
-      attendees: 203,
+      attendees: 156,
       price: "₹500 per person"
     },
     {
-      id: 10,
-      title: "Cooking Masterclass",
-      venue: "Chef's Table Academy",
-      image: "https://images.unsplash.com/photo-1556908114-f6e7ad7d3136?w=300&h=150&fit=crop",
-      time: "Sat, 3:00 PM",
+      id: 3, // Changed from 10 to existing event ID
+      title: "Community Garden Workshop",
+      venue: "Cubbon Park Extension",
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=300&h=150&fit=crop",
+      time: "Sat, 10:00 AM",
       distance: "2.1 km away",
-      reason: "You frequently order Italian food",
+      reason: "You frequently order healthy food",
       socialProof: "Trending in Koramangala",
       trendingNote: "Bookings up 340% this week",
       tags: ["Learn & taste", "Interactive experience"],
-      attendees: 24,
-      price: "₹3,200 per person"
+      attendees: 89,
+      price: "₹1,200 per person"
     }
   ];
 
