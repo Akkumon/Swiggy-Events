@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, ShoppingBag, Calendar, User, Package, Gift, Plus } from 'lucide-react';
+import { MapPin, ShoppingBag, Calendar, User, Package, Gift } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const TabBar = () => {
@@ -57,13 +57,13 @@ const TabBar = () => {
       description: 'Dine & Events'
     },
     {
-      id: 'organize',
-      label: 'ORGANIZE',
-      icon: Plus,
-      path: '/create-event',
-      isActive: location.pathname === '/create-event',
-      notifications: notifications.organize,
-      description: 'Create Events'
+      id: 'profile',
+      label: 'PROFILE',
+      icon: User,
+      path: '/profile',
+      isActive: location.pathname === '/profile',
+      notifications: 0,
+      description: 'Account'
     }
   ];
 

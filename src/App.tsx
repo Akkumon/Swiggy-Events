@@ -10,6 +10,7 @@ import CreateEvent from "./components/CreateEvent";
 import DeliveryDashboard from "./components/DeliveryDashboard";
 import OrderHistory from "./components/OrderHistory";
 import PartnerPortal from "./components/PartnerPortal";
+import Profile from "./components/Profile";
 import NotFound from "./pages/NotFound";
 import TabBar from "./components/TabBar";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -49,6 +50,7 @@ const App = () => (
                 <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
                 <Route path="/order-history" element={<OrderHistory />} />
                 <Route path="/partner-portal" element={<PartnerPortal />} />
+                <Route path="/profile" element={<Profile />} />
                 
                 {/* Ecosystem Integration Routes */}
                 <Route path="/food" element={<div className="p-4 text-center"><h1>Swiggy Food Delivery</h1><p>Redirecting to main Swiggy app...</p></div>} />

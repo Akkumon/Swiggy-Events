@@ -1,453 +1,280 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Card } from './ui/card';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import { 
-  Breadcrumb, 
-  BreadcrumbItem, 
-  BreadcrumbLink, 
-  BreadcrumbList, 
-  BreadcrumbPage, 
-  BreadcrumbSeparator 
-} from './ui/breadcrumb';
-import EnhancedEventCard from './EnhancedEventCard';
-import RecommendationCarousel from './RecommendationCarousel';
-import SmartFiltering from './SmartFiltering';
-import SkeletonLoader from './SkeletonLoader';
-import MobileOptimized from './MobileOptimized';
-import AccessibilityEnhanced from './AccessibilityEnhanced';
-import ErrorFallback from './ErrorFallback';
-import PullToRefresh from './PullToRefresh';
-import ProgressiveImage from './ProgressiveImage';
-import { useNetworkStatus } from '@/hooks/useNetworkStatus';
+  Search, 
+  MapPin, 
+  Calendar, 
+  Users, 
+  Star, 
+  Clock,
+  Plus,
+  TrendingUp,
+  Edit,
+  Eye,
+  Sparkles,
+  Target
+} from 'lucide-react';
 import { mockEvents } from '@/data/mockEvents';
-import { ChevronRight, Star, Clock, MapPin, Heart, Map } from 'lucide-react';
+import { mockPartnerData } from '@/data/mockData';
 
 const EventsHome = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('discover');
-  const [showMapView, setShowMapView] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  
-  const { isOnline, isSlowConnection } = useNetworkStatus();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showPartnerDashboard, setShowPartnerDashboard] = useState(true); // Mock partner status
 
-  // Mock user dining history with events
-  const userFavoriteRestaurants = [
+  const partnerEvents = [
     {
-      id: 1,
-      name: "Bombay Street Kitchen",
-      cuisine: "Street Food",
-      orderCount: 8,
-      rating: 4.5,
-      image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=200&fit=crop",
-      currentEvent: {
-        name: "Street Food Festival",
-        time: "Today, 6:00 PM",
-        attendees: 156
-      }
+      id: 'partner-1',
+      name: 'Street Food Festival',
+      date: 'Dec 15, 2024',
+      attendees: 156,
+      status: 'completed',
+      revenue: 35000,
+      canEdit: false
     },
     {
-      id: 2,
-      name: "Blue Terrace Restaurant", 
-      cuisine: "Italian",
-      orderCount: 3,
-      rating: 4.3,
-      image: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&h=200&fit=crop",
-      currentEvent: {
-        name: "Live Jazz & Dinner",
-        time: "Tomorrow, 7:30 PM", 
-        attendees: 45
-      }
+      id: 'partner-2', 
+      name: 'Wine Tasting Evening',
+      date: 'Dec 21, 2024',
+      attendees: 32,
+      status: 'upcoming',
+      revenue: 18000,
+      canEdit: true
     },
     {
-      id: 3,
-      name: "Toscano Italian Bistro",
-      cuisine: "Italian", 
-      orderCount: 5,
-      rating: 4.6,
-      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=200&fit=crop",
-      currentEvent: {
-        name: "Wine Tasting Evening",
-        time: "Sat, 7:00 PM",
-        attendees: 32
-      }
+      id: 'partner-3',
+      name: 'Italian Cooking Workshop',
+      date: 'Dec 28, 2024',
+      attendees: 24,
+      status: 'upcoming', 
+      revenue: 12000,
+      canEdit: true
     }
   ];
 
-  // Enhanced events with user context
-  const enhancedEvents = mockEvents.map(event => ({
-    ...event,
-    restaurantName: event.id === 1 ? "Bombay Street Kitchen" : 
-                   event.id === 2 ? "Blue Terrace Restaurant" :
-                   event.id === 3 ? "Green Thumb Bistro" : "Lakeside Cafe",
-    cuisineType: event.id === 1 ? "Street Food" :
-                event.id === 2 ? "Italian" :
-                event.id === 3 ? "Healthy" : "Multi-cuisine",
-    userOrderHistory: event.id === 1 ? 8 : event.id === 2 ? 3 : 0,
-    restaurantRating: event.id === 1 ? 4.5 : event.id === 2 ? 4.3 : event.id === 3 ? 4.6 : 4.2,
-    specialties: event.id === 1 ? ["Vada Pav", "Pav Bhaji"] :
-                event.id === 2 ? ["Pasta", "Wine Selection"] :
-                event.id === 3 ? ["Organic Salads", "Fresh Herbs"] : ["BBQ", "Lake Views"]
-  }));
-
-  const handleRefresh = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Content refreshed');
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Refresh failed'));
-    } finally {
-      setIsLoading(false);
+  const aiSuggestions = [
+    {
+      eventId: 'partner-2',
+      type: 'description',
+      title: 'Improve Event Description',
+      suggestion: 'Try a more engaging description to boost bookings by 25%'
+    },
+    {
+      eventId: 'partner-3',
+      type: 'targeting',
+      title: 'Target More Customers',
+      suggestion: 'Notify Italian food lovers in your area (247 customers)'
     }
-  }, []);
+  ];
 
-  const handleFilterChange = (filters: string[]) => {
-    setActiveFilters(filters);
-    console.log('Applied filters:', filters);
-  };
-
-  const handleMapToggle = () => {
-    setShowMapView(!showMapView);
-  };
-
-  if (error && !isOnline) {
-    return <ErrorFallback error={error} resetError={() => setError(null)} isOffline={!isOnline} />;
-  }
+  const filteredEvents = mockEvents.filter(event =>
+    event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    event.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    event.location.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <AccessibilityEnhanced ariaLabel="Swiggy Events Home">
-      <PullToRefresh onRefresh={handleRefresh}>
-        <div className="min-h-screen bg-gray-50 font-sans">
-          {/* Network status indicator */}
-          {!isOnline && (
-            <div className="bg-red-500 text-white text-center py-2 text-sm">
-              You're offline. Some features may not work.
-            </div>
-          )}
+    <div className="min-h-screen bg-gray-50 pb-20">
+      {/* Header */}
+      <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
+        <div className="px-4 py-3">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Dine & Events</h1>
           
-          {isSlowConnection && isOnline && (
-            <div className="bg-yellow-500 text-white text-center py-2 text-sm">
-              Slow connection detected. Loading optimized content.
-            </div>
-          )}
-
-          {/* Header with Ecosystem Integration */}
-          <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
-            <div className="container-responsive py-3 md:py-4">
-              {/* Breadcrumb Navigation */}
-              <Breadcrumb className="mb-3">
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/" className="text-orange-600 font-medium">
-                      Swiggy
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/dineout" className="text-gray-600">
-                      Dineout & Events
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="text-gray-900 font-medium">
-                      Discover
-                    </BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-
-              <div className="flex items-center mb-3">
-                {/* Swiggy Logo */}
-                <div className="w-12 h-12 md:w-16 md:h-16 mr-2">
-                  <ProgressiveImage
-                    src="/lovable-uploads/0f555462-9c4a-4b14-883a-dae7423545e2.png"
-                    alt="Swiggy Logo"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <h1 className="text-xl md:text-2xl font-bold text-orange-600 leading-tight tracking-tight">Swiggy</h1>
-                  <h2 className="text-base md:text-lg font-medium text-orange-600 leading-tight tracking-tight">Events</h2>
-                </div>
-              </div>
-              
-              {/* Cross-service hint */}
-              <div className="bg-orange-50 rounded-lg p-2 mb-3 border border-orange-100">
-                <p className="text-xs text-orange-700">
-                  💡 Also available on Swiggy main app - Find events while ordering food!
-                </p>
-              </div>
-
-              {/* Tab Navigation with mobile optimization */}
-              <MobileOptimized className="flex space-x-1 bg-gray-100 rounded-lg p-1">
-                {['discover', 'bookings', 'profile'].map((tab) => (
-                  <MobileOptimized
-                    key={tab}
-                    minTouchTarget
-                    className={`flex-1 py-2 px-2 md:px-4 rounded-md text-xs md:text-sm font-medium transition-all tracking-tight ${
-                      activeTab === tab
-                        ? 'bg-white text-orange-600 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    <button
-                      onClick={() => setActiveTab(tab)}
-                      className="w-full h-full"
-                      aria-label={`Switch to ${tab} tab`}
-                    >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
-                  </MobileOptimized>
-                ))}
-              </MobileOptimized>
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <div className="container-responsive section-padding">
-            {activeTab === 'discover' && (
-              <>
-                {/* Smart Recommendation Carousel with loading state */}
-                <div className="mb-8">
-                  {isLoading ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="h-5 w-5 bg-gray-300 rounded animate-pulse" />
-                        <div className="h-6 w-48 bg-gray-300 rounded animate-pulse" />
-                      </div>
-                      <div className="flex space-x-4 overflow-hidden">
-                        <SkeletonLoader type="recommendation" count={3} />
-                      </div>
-                    </div>
-                  ) : (
-                    <RecommendationCarousel onEventClick={(eventId) => navigate(`/event/${eventId}`)} />
-                  )}
-                </div>
-
-                {/* Smart Filtering Section */}
-                <div className="mb-8">
-                  <SmartFiltering 
-                    onFilterChange={handleFilterChange}
-                    showMapView={showMapView}
-                    onMapToggle={handleMapToggle}
-                  />
-                </div>
-
-                {/* Map View Toggle */}
-                {showMapView && (
-                  <div className="mb-8">
-                    <Card className="p-6 text-center bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-                      <Map className="h-12 w-12 text-blue-500 mx-auto mb-3" />
-                      <h3 className="text-lg font-semibold text-blue-900 mb-2">Map View Coming Soon</h3>
-                      <p className="text-blue-700 mb-4">
-                        Interactive map with event locations, distance calculations, and route suggestions
-                      </p>
-                      <div className="flex flex-wrap justify-center gap-2">
-                        <Badge className="bg-blue-100 text-blue-700">Distance-based filtering</Badge>
-                        <Badge className="bg-blue-100 text-blue-700">Travel time estimates</Badge>
-                        <Badge className="bg-blue-100 text-blue-700">Route optimization</Badge>
-                      </div>
-                    </Card>
-                  </div>
-                )}
-
-                {/* Events at Restaurants You Love with mobile optimization */}
-                <div className="mb-8">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Heart className="h-5 w-5 text-red-500" />
-                    <h2 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight">
-                      Events at restaurants you love
-                    </h2>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Based on your order history and dining preferences
-                  </p>
-
-                  {isLoading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <SkeletonLoader type="restaurant-card" count={3} />
-                    </div>
-                  ) : (
-                    <MobileOptimized 
-                      enableSwipe 
-                      onSwipeLeft={() => console.log('Swipe left for more restaurants')}
-                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-                    >
-                      {userFavoriteRestaurants.map((restaurant) => (
-                        <MobileOptimized
-                          key={restaurant.id}
-                          minTouchTarget
-                        >
-                          <Card 
-                            className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                            onClick={() => navigate(`/event/${restaurant.id}`)}
-                            role="button"
-                            tabIndex={0}
-                            aria-label={`View events at ${restaurant.name}`}
-                          >
-                            <div className="relative h-40 bg-gray-200 overflow-hidden">
-                              <ProgressiveImage
-                                src={restaurant.image}
-                                alt={restaurant.name}
-                                className="w-full h-full object-cover"
-                              />
-                              {/* ... keep existing code (badges) */}
-                              <div className="absolute top-2 left-2">
-                                <Badge className="bg-green-600 text-white text-xs">
-                                  ✓ You've ordered here {restaurant.orderCount} times
-                                </Badge>
-                              </div>
-                              <div className="absolute bottom-2 right-2">
-                                <Badge className="bg-orange-500 text-white text-xs">
-                                  Live Event
-                                </Badge>
-                              </div>
-                            </div>
-                            
-                            {/* ... keep existing code (card content) */}
-                            <div className="p-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-semibold text-gray-900 text-sm md:text-base">
-                                  {restaurant.name}
-                                </h3>
-                                <div className="flex items-center">
-                                  <Star className="h-3 w-3 text-yellow-500 fill-current" />
-                                  <span className="text-xs text-gray-600 ml-1">{restaurant.rating}</span>
-                                </div>
-                              </div>
-                              
-                              <p className="text-xs text-orange-600 mb-2">{restaurant.cuisine}</p>
-                              
-                              <div className="border-t pt-3">
-                                <h4 className="font-medium text-gray-900 text-sm mb-1">
-                                  {restaurant.currentEvent.name}
-                                </h4>
-                                <div className="flex items-center justify-between text-xs text-gray-600">
-                                  <div className="flex items-center">
-                                    <Clock className="h-3 w-3 mr-1" />
-                                    {restaurant.currentEvent.time}
-                                  </div>
-                                  <span>{restaurant.currentEvent.attendees} going</span>
-                                </div>
-                              </div>
-                            </div>
-                          </Card>
-                        </MobileOptimized>
-                      ))}
-                    </MobileOptimized>
-                  )}
-                </div>
-
-                {/* Context-Aware Discovery */}
-                <div className="mb-8">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-2 tracking-tight">
-                    Because you love Italian and live music
-                  </h2>
-                  <p className="text-sm text-gray-600 mb-4">
-                    More events that match your dining preferences
-                  </p>
-                  
-                  <div className="bg-blue-50 rounded-lg p-4 mb-4 border border-blue-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Star className="h-4 w-4 text-blue-600" />
-                      <h3 className="font-medium text-blue-900">Smart Suggestion</h3>
-                    </div>
-                    <p className="text-sm text-blue-700">
-                      Based on your 3 orders at Blue Terrace Restaurant and preference for evening dining
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {enhancedEvents.filter(event => event.cuisineType === 'Italian').map((event) => (
-                      <EnhancedEventCard
-                        key={event.id}
-                        event={event}
-                        onViewDetails={() => navigate(`/event/${event.id}`)}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* All Events - Secondary Position */}
-                <div className="mb-8">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-4 tracking-tight">
-                    More events in your area
-                  </h2>
-                  
-                  {isLoading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <SkeletonLoader type="event-card" count={6} />
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {enhancedEvents.map((event) => (
-                        <EnhancedEventCard
-                          key={event.id}
-                          event={event}
-                          onViewDetails={() => navigate(`/event/${event.id}`)}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-
-            {activeTab === 'bookings' && (
-              <div className="text-center py-8 md:py-12">
-                <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 tracking-tight">Your Event Bookings</h3>
-                <p className="text-sm md:text-base text-gray-600 mb-4">Track your upcoming events and dining reservations</p>
-                <MobileOptimized minTouchTarget>
-                  <Button 
-                    variant="outline"
-                    onClick={() => navigate('/order-history')}
-                    className="bg-orange-500 hover:bg-orange-600 text-white font-medium text-sm md:text-base px-4 md:px-6 py-2 md:py-3 min-h-[44px]"
-                    aria-label="View your booking history"
-                  >
-                    View Booking History
-                  </Button>
-                </MobileOptimized>
-              </div>
-            )}
-
-            {activeTab === 'profile' && (
-              <div className="text-center py-8 md:py-12">
-                <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 tracking-tight">Your Profile</h3>
-                <p className="text-sm md:text-base text-gray-600 mb-6">Manage your dining preferences and event interests</p>
-                
-                <div className="max-w-md mx-auto space-y-4">
-                  <div className="bg-white rounded-lg p-4 border">
-                    <h4 className="font-medium text-gray-900 mb-2">Dining Preferences</h4>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="text-orange-600 border-orange-200">Italian</Badge>
-                      <Badge variant="outline" className="text-orange-600 border-orange-200">Street Food</Badge>
-                      <Badge variant="outline" className="text-orange-600 border-orange-200">Live Music</Badge>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg p-4 border">
-                    <h4 className="font-medium text-gray-900 mb-2">Event Interests</h4>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="text-orange-600 border-orange-200">Food Festivals</Badge>
-                      <Badge variant="outline" className="text-orange-600 border-orange-200">Jazz Nights</Badge>
-                      <Badge variant="outline" className="text-orange-600 border-orange-200">Wine Tastings</Badge>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Search events, restaurants, cuisines..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
           </div>
         </div>
-      </PullToRefresh>
-    </AccessibilityEnhanced>
+      </div>
+
+      <div className="px-4 py-6">
+        {/* Partner Dashboard Section */}
+        {showPartnerDashboard && (
+          <div className="mb-8">
+            {/* Create New Event CTA */}
+            <Card className="p-6 mb-6 bg-gradient-to-r from-orange-500 to-red-500 text-white">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="h-5 w-5" />
+                    <h2 className="text-xl font-bold">Organize Your Next Event</h2>
+                  </div>
+                  <p className="text-orange-100 mb-4 text-sm">
+                    Use AI to create amazing events that bring people together
+                  </p>
+                  <Button 
+                    onClick={() => navigate('/create-event')}
+                    className="bg-white text-orange-600 hover:bg-orange-50 font-semibold"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create New Event
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
+            {/* Your Events Section */}
+            <Card className="p-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Your Events</h3>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate('/partner-portal')}
+                >
+                  View All
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                {partnerEvents.slice(0, 2).map((event) => (
+                  <div key={event.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="font-medium text-gray-900">{event.name}</h4>
+                        <Badge 
+                          className={event.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}
+                        >
+                          {event.status}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-4 w-4" />
+                          {event.date}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Users className="h-4 w-4" />
+                          {event.attendees} attendees
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <TrendingUp className="h-4 w-4" />
+                          ₹{event.revenue.toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      {event.canEdit && (
+                        <Button variant="outline" size="sm">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
+                      <Button variant="outline" size="sm">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* AI Suggestions */}
+            {aiSuggestions.length > 0 && (
+              <Card className="p-4 mb-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles className="h-5 w-5 text-purple-600" />
+                  <h3 className="font-semibold text-purple-900">AI Suggestions</h3>
+                </div>
+                <div className="space-y-2">
+                  {aiSuggestions.map((suggestion, index) => (
+                    <div key={index} className="bg-white p-3 rounded-lg border border-purple-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-purple-900 text-sm">{suggestion.title}</h4>
+                          <p className="text-xs text-purple-600 mt-1">{suggestion.suggestion}</p>
+                        </div>
+                        <Button variant="outline" size="sm" className="border-purple-200">
+                          <Target className="h-4 w-4 mr-1" />
+                          Apply
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            <Separator className="my-6" />
+          </div>
+        )}
+
+        {/* Regular Events Section */}
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Discover Events</h2>
+          
+          {/* Events Grid */}
+          <div className="grid gap-4">
+            {filteredEvents.map((event) => (
+              <Card key={event.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div className="aspect-video bg-gradient-to-r from-orange-400 to-red-500 relative">
+                  <div className="absolute inset-0 bg-black bg-opacity-30 flex items-end p-4">
+                    <div className="text-white">
+                      <Badge className="bg-white bg-opacity-20 text-white mb-2">
+                        {event.category}
+                      </Badge>
+                      <h3 className="font-semibold text-lg">{event.title}</h3>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4">
+                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-4 w-4" />
+                      {event.date}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      {event.time}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-1 text-sm text-gray-600 mb-3">
+                    <MapPin className="h-4 w-4" />
+                    {event.location}
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm text-gray-600">{event.attendees} going</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 text-yellow-500" />
+                        <span className="text-sm text-gray-600">{event.rating}</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-semibold text-gray-900">₹{event.price}</div>
+                      <div className="text-xs text-gray-500">per person</div>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    className="w-full mt-4 bg-orange-500 hover:bg-orange-600"
+                    onClick={() => navigate(`/event/${event.id}`)}
+                  >
+                    Book Now
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
