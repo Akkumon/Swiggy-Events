@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EventsHome from "./components/EventsHome";
 import EventDetail from "./components/EventDetail";
 import CreateEvent from "./components/CreateEvent";
+import Profile from "./components/Profile";
 import DeliveryDashboard from "./components/DeliveryDashboard";
 import OrderHistory from "./components/OrderHistory";
 import PartnerPortal from "./components/PartnerPortal";
@@ -27,6 +29,7 @@ const App = () => (
             <Route path="/" element={<EventsHome />} />
             <Route path="/event/:id" element={<EventDetail />} />
             <Route path="/create-event" element={<CreateEvent />} />
+            <Route path="/account" element={<Profile />} />
             <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
             <Route path="/order-history" element={<OrderHistory />} />
             <Route path="/partner-portal" element={<PartnerPortal />} />
