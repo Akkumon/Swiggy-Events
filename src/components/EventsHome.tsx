@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
@@ -20,7 +21,6 @@ import {
   Target
 } from 'lucide-react';
 import { mockEvents } from '@/data/mockEvents';
-import { mockPartnerData } from '@/data/mockData';
 
 const EventsHome = () => {
   const navigate = useNavigate();
@@ -72,11 +72,16 @@ const EventsHome = () => {
     }
   ];
 
-  const filteredEvents = mockEvents.filter(event =>
-    event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    event.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    event.location.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredEvents = mockEvents.filter(event => {
+    const searchLower = searchQuery.toLowerCase();
+    const title = event.name?.toLowerCase() || '';
+    const category = event.type?.toLowerCase() || '';
+    const location = event.location?.toLowerCase() || '';
+    
+    return title.includes(searchLower) ||
+           category.includes(searchLower) ||
+           location.includes(searchLower);
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -221,9 +226,9 @@ const EventsHome = () => {
                   <div className="absolute inset-0 bg-black bg-opacity-30 flex items-end p-4">
                     <div className="text-white">
                       <Badge className="bg-white bg-opacity-20 text-white mb-2">
-                        {event.category}
+                        {event.type}
                       </Badge>
-                      <h3 className="font-semibold text-lg">{event.title}</h3>
+                      <h3 className="font-semibold text-lg">{event.name}</h3>
                     </div>
                   </div>
                 </div>
@@ -236,7 +241,7 @@ const EventsHome = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="h-4 w-4" />
-                      {event.time}
+                      {event.date} {/* Using date as time is not available */}
                     </div>
                   </div>
                   
@@ -253,11 +258,11 @@ const EventsHome = () => {
                       </div>
                       <div className="flex items-center gap-1">
                         <Star className="h-4 w-4 text-yellow-500" />
-                        <span className="text-sm text-gray-600">{event.rating}</span>
+                        <span className="text-sm text-gray-600">4.5</span> {/* Default rating */}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-lg font-semibold text-gray-900">₹{event.price}</div>
+                      <div className="text-lg font-semibold text-gray-900">₹500</div> {/* Default price */}
                       <div className="text-xs text-gray-500">per person</div>
                     </div>
                   </div>
