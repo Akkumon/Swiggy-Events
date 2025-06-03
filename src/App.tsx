@@ -10,7 +10,6 @@ import CreateEvent from "./components/CreateEvent";
 import DeliveryDashboard from "./components/DeliveryDashboard";
 import OrderHistory from "./components/OrderHistory";
 import PartnerPortal from "./components/PartnerPortal";
-import PartnerProfile from "./components/PartnerProfile";
 import NotFound from "./pages/NotFound";
 import TabBar from "./components/TabBar";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -54,19 +53,6 @@ const App = () => (
                 {/* Ecosystem Integration Routes */}
                 <Route path="/food" element={<div className="p-4 text-center"><h1>Swiggy Food Delivery</h1><p>Redirecting to main Swiggy app...</p></div>} />
                 <Route path="/instamart" element={<div className="p-4 text-center"><h1>Swiggy Instamart</h1><p>Grocery delivery service</p></div>} />
-                <Route path="/account" element={
-                  <div className="min-h-screen bg-gray-50">
-                    <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
-                      <div className="px-4 py-3">
-                        <h1 className="text-lg font-semibold text-gray-900">Partner Dashboard</h1>
-                        <p className="text-sm text-gray-600">Manage your restaurant events and profile</p>
-                      </div>
-                    </div>
-                    <div className="px-4 py-6">
-                      <PartnerProfile />
-                    </div>
-                  </div>
-                } />
                 
                 <Route path="*" element={<NotFound />} />
               </Routes>

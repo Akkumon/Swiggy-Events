@@ -1,492 +1,486 @@
+
 import React, { useState } from 'react';
-import { MapPin } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Wand2, Eye, Upload, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
-import AIEventHelper from './AIEventHelper';
-import SmartPricingIntelligence from './SmartPricingIntelligence';
-import CustomerTargetingTools from './CustomerTargetingTools';
-import AIContentShowcase from './AIContentShowcase';
-import { restaurantImages } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
+import SmartPromptWizard from './SmartPromptWizard';
 
 interface FormData {
-  eventName: string;
   eventType: string;
   date: string;
   time: string;
+  ticketPrice: string;
+  capacity: string;
   location: string;
+  title: string;
   description: string;
-  maxAttendees: string;
-  foodAvailable: boolean;
-  partnerRestaurants: number[];
-}
-
-interface FormErrors {
-  eventName?: string;
-  eventType?: string;
-  date?: string;
-  time?: string;
-  location?: string;
-  description?: string;
-  maxAttendees?: string;
+  pricingSuggestion: string;
+  targetAudience: string[];
+  bannerImage: string;
 }
 
 const CreateEvent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    eventName: '',
     eventType: '',
     date: '',
     time: '',
+    ticketPrice: '',
+    capacity: '',
     location: '',
+    title: '',
     description: '',
-    maxAttendees: '',
-    foodAvailable: false,
-    partnerRestaurants: []
+    pricingSuggestion: '',
+    targetAudience: [],
+    bannerImage: ''
   });
 
   const eventTypes = [
     'Food Festival',
-    'Music & Dining',
-    'Workshop',
-    'Community Gathering',
+    'Wine Tasting',
+    'Cooking Workshop',
+    'Live Music & Dining',
+    'Cultural Night',
     'Pop-up Market',
-    'Cultural Event'
+    'Community Gathering'
   ];
 
-  const availableRestaurants = [
-    { id: 1, name: 'Bombay Street Kitchen', cuisine: 'Street Food' },
-    { id: 2, name: 'Dosa Corner Express', cuisine: 'South Indian' },
-    { id: 3, name: 'Chaat Wala', cuisine: 'North Indian' },
-    { id: 4, name: 'Burger Junction', cuisine: 'Fast Food' },
-    { id: 5, name: 'Spice Garden', cuisine: 'Multi-cuisine' }
+  const audienceSegments = [
+    'Italian food lovers',
+    'Wine enthusiasts',
+    'Families with kids',
+    'Young professionals',
+    'Date night couples',
+    'Food bloggers',
+    'Vegetarian diners',
+    'Premium diners'
   ];
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-    
-    if (!formData.eventName.trim()) {
-      newErrors.eventName = 'Event name is required';
-    }
-    
-    if (!formData.eventType) {
-      newErrors.eventType = 'Event type is required';
-    }
-    
-    if (!formData.date) {
-      newErrors.date = 'Date is required';
-    } else {
-      const selectedDate = new Date(formData.date);
-      const today = new Date();
-      if (selectedDate < today) {
-        newErrors.date = 'Date cannot be in the past';
-      }
-    }
-    
-    if (!formData.time) {
-      newErrors.time = 'Time is required';
-    }
-    
-    if (!formData.location.trim()) {
-      newErrors.location = 'Location is required';
-    }
-    
-    if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
-    }
-    
-    if (formData.maxAttendees) {
-      const attendees = parseInt(formData.maxAttendees);
-      if (isNaN(attendees) || attendees <= 0) {
-        newErrors.maxAttendees = 'Maximum attendees must be a positive number';
-      }
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      toast({
-        title: "Validation Error",
-        description: "Please check the form for errors",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Event Created Successfully!",
-        description: "Your event has been published and is now live.",
-      });
-      navigate('/');
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create event. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // AI Helper Functions
-  const handleGenerateTitle = (title: string) => {
-    setFormData({
-      ...formData,
-      eventName: title
-    });
-  };
-
-  const handleGenerateDescription = (description: string) => {
-    setFormData({
-      ...formData,
-      description: description
-    });
-  };
-
-  const suggestVendors = async () => {
-    setIsLoading(true);
+  const handleGenerateTitle = async () => {
+    setIsGenerating(true);
+    // Simulate AI generation
     setTimeout(() => {
-      setFormData({
-        ...formData,
-        partnerRestaurants: [1, 2, 3]
+      const titles = [
+        `${formData.eventType} Spectacular`,
+        `Exclusive ${formData.eventType} Experience`,
+        `Weekend ${formData.eventType} Fiesta`,
+        `Premium ${formData.eventType} Night`
+      ];
+      const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+      setFormData({ ...formData, title: randomTitle });
+      setIsGenerating(false);
+      toast({
+        title: "Title Generated!",
+        description: "AI has created a catchy title for your event.",
       });
-      setIsLoading(false);
     }, 1500);
   };
 
-  const handleGenerateMarketing = (content: string) => {
-    toast({
-      title: "Marketing Content Generated!",
-      description: "Marketing content has been copied to your clipboard.",
-    });
-    navigator.clipboard.writeText(content);
+  const handleGenerateDescription = async () => {
+    setIsGenerating(true);
+    // Simulate AI generation
+    setTimeout(() => {
+      const description = `Join us for an unforgettable ${formData.eventType.toLowerCase()} experience! Discover amazing flavors, meet fellow food enthusiasts, and enjoy a vibrant atmosphere. Perfect for ${formData.capacity ? `groups of up to ${formData.capacity} people` : 'everyone'}. Book your spot now for an evening you won't forget!`;
+      setFormData({ ...formData, description });
+      setIsGenerating(false);
+      toast({
+        title: "Description Generated!",
+        description: "AI has crafted an engaging description for your event.",
+      });
+    }, 2000);
   };
+
+  const handleGeneratePricing = async () => {
+    setIsGenerating(true);
+    // Simulate AI pricing analysis
+    setTimeout(() => {
+      const basePrice = parseInt(formData.ticketPrice) || 500;
+      const suggestion = `Recommended: ₹${basePrice + 100} (15% premium for ${formData.eventType}) - Similar events in your area charge ₹${basePrice - 50} to ₹${basePrice + 200}`;
+      setFormData({ ...formData, pricingSuggestion: suggestion });
+      setIsGenerating(false);
+      toast({
+        title: "Pricing Analyzed!",
+        description: "AI has analyzed market rates for optimal pricing.",
+      });
+    }, 1800);
+  };
+
+  const handleGenerateAudience = async () => {
+    setIsGenerating(true);
+    // Simulate AI audience targeting
+    setTimeout(() => {
+      const eventTypeMapping: { [key: string]: string[] } = {
+        'Food Festival': ['Italian food lovers', 'Families with kids', 'Food bloggers'],
+        'Wine Tasting': ['Wine enthusiasts', 'Date night couples', 'Premium diners'],
+        'Cooking Workshop': ['Food bloggers', 'Young professionals', 'Families with kids'],
+        'Live Music & Dining': ['Date night couples', 'Young professionals', 'Premium diners']
+      };
+      
+      const suggestedAudience = eventTypeMapping[formData.eventType] || ['Young professionals', 'Food bloggers'];
+      setFormData({ ...formData, targetAudience: suggestedAudience });
+      setIsGenerating(false);
+      toast({
+        title: "Audience Recommended!",
+        description: "AI has identified your ideal customer segments.",
+      });
+    }, 1200);
+  };
+
+  const handleNext = () => {
+    if (currentStep < 6) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handlePublish = () => {
+    toast({
+      title: "Event Published!",
+      description: "Your event is now live and available for bookings.",
+    });
+    navigate('/');
+  };
+
+  const stepTitles = [
+    'Basic Details',
+    'GenAI Content',
+    'Smart Pricing',
+    'Customer Targeting',
+    'Visuals',
+    'Review & Publish'
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
-        <div className="px-4 py-3 flex items-center">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => navigate(-1)}
-            className="mr-3"
-          >
-            ← Back
-          </Button>
-          <h1 className="text-lg font-semibold text-gray-900">AI-Powered Event Creation</h1>
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => navigate(-1)}
+                className="mr-3"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              <div>
+                <h1 className="text-lg font-semibold text-gray-900">Organize Event</h1>
+                <p className="text-sm text-gray-600">Step {currentStep} of 6: {stepTitles[currentStep - 1]}</p>
+              </div>
+            </div>
+            <Badge variant="secondary">{Math.round((currentStep / 6) * 100)}% Complete</Badge>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+            <div 
+              className="bg-orange-500 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${(currentStep / 6) * 100}%` }}
+            ></div>
+          </div>
         </div>
       </div>
 
       <div className="px-4 py-6">
-        {/* Hero Section */}
-        <Card className="p-6 mb-6 bg-gradient-to-r from-orange-500 to-red-500 text-white">
-          <h2 className="text-xl font-semibold mb-2">Transform Your Ideas Into Successful Events</h2>
-          <p className="text-orange-100 text-sm">
-            Our AI-powered platform helps restaurants create, price, and promote events that drive real business results.
-          </p>
-        </Card>
-
-        {/* AI Content Generator - Prominent Section */}
-        <div className="mb-6">
-          <AIContentShowcase 
-            eventType={formData.eventType || 'dining experience'}
-            cuisine={formData.eventType || 'culinary'}
-            location={formData.location || 'your location'}
-          />
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Information */}
+        {/* Step 1: Basic Details */}
+        {currentStep === 1 && (
           <Card className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Event Details</h3>
-            
+            <h2 className="text-xl font-semibold mb-4">Basic Event Details</h2>
             <div className="space-y-4">
-              {/* Event Name with AI suggestion */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <Label htmlFor="eventName">Event Name *</Label>
-                  {formData.eventType && formData.location && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        // Auto-generate title based on selections
-                        const generatedTitle = `${formData.eventType} Experience at ${formData.location}`;
-                        setFormData({ ...formData, eventName: generatedTitle });
-                      }}
-                      className="text-xs text-orange-600 hover:text-orange-700"
-                    >
-                      Generate Title ✨
-                    </Button>
-                  )}
-                </div>
-                <Input
-                  id="eventName"
-                  value={formData.eventName}
-                  onChange={(e) => setFormData({ ...formData, eventName: e.target.value })}
-                  placeholder="e.g., Community Street Food Festival"
-                  className={errors.eventName ? "border-red-500" : ""}
-                />
-                {errors.eventName && (
-                  <p className="text-red-500 text-sm mt-1">{errors.eventName}</p>
-                )}
-              </div>
-
               <div>
                 <Label htmlFor="eventType">Event Type *</Label>
-                <Select 
-                  onValueChange={(value) => setFormData({ ...formData, eventType: value })}
-                  value={formData.eventType}
-                >
-                  <SelectTrigger className={errors.eventType ? "border-red-500" : ""}>
+                <Select onValueChange={(value) => setFormData({ ...formData, eventType: value })}>
+                  <SelectTrigger>
                     <SelectValue placeholder="Select event type" />
                   </SelectTrigger>
                   <SelectContent>
                     {eventTypes.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
+                      <SelectItem key={type} value={type}>{type}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.eventType && (
-                  <p className="text-red-500 text-sm mt-1">{errors.eventType}</p>
-                )}
               </div>
-
+              
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="date">Date *</Label>
                   <Input
-                    id="date"
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className={errors.date ? "border-red-500" : ""}
                   />
-                  {errors.date && (
-                    <p className="text-red-500 text-sm mt-1">{errors.date}</p>
-                  )}
                 </div>
                 <div>
                   <Label htmlFor="time">Time *</Label>
                   <Input
-                    id="time"
                     type="time"
                     value={formData.time}
                     onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                    className={errors.time ? "border-red-500" : ""}
                   />
-                  {errors.time && (
-                    <p className="text-red-500 text-sm mt-1">{errors.time}</p>
-                  )}
                 </div>
               </div>
-
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="ticketPrice">Ticket Price (₹) *</Label>
+                  <Input
+                    type="number"
+                    placeholder="500"
+                    value={formData.ticketPrice}
+                    onChange={(e) => setFormData({ ...formData, ticketPrice: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="capacity">Capacity *</Label>
+                  <Input
+                    type="number"
+                    placeholder="50"
+                    value={formData.capacity}
+                    onChange={(e) => setFormData({ ...formData, capacity: e.target.value })}
+                  />
+                </div>
+              </div>
+              
               <div>
                 <Label htmlFor="location">Location *</Label>
                 <Input
-                  id="location"
+                  placeholder="e.g., Your Restaurant Name, Koramangala"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  placeholder="e.g., Central Park, Koramangala"
-                  className={errors.location ? "border-red-500" : ""}
                 />
-                {errors.location && (
-                  <p className="text-red-500 text-sm mt-1">{errors.location}</p>
-                )}
               </div>
+            </div>
+          </Card>
+        )}
 
+        {/* Step 2: GenAI Content */}
+        {currentStep === 2 && (
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">GenAI Content Creation</h2>
+            <div className="space-y-6">
               <div>
-                <Label htmlFor="description">Description *</Label>
+                <div className="flex items-center justify-between mb-2">
+                  <Label htmlFor="title">Event Title</Label>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleGenerateTitle}
+                    disabled={isGenerating || !formData.eventType}
+                  >
+                    <Wand2 className="h-4 w-4 mr-2" />
+                    Generate Title
+                  </Button>
+                </div>
+                <Input
+                  placeholder="Event title will appear here..."
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                />
+              </div>
+              
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label htmlFor="description">Event Description</Label>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleGenerateDescription}
+                    disabled={isGenerating || !formData.eventType}
+                  >
+                    <Wand2 className="h-4 w-4 mr-2" />
+                    Generate Description
+                  </Button>
+                </div>
                 <Textarea
-                  id="description"
+                  placeholder="Event description will appear here..."
+                  rows={4}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Describe your event..."
-                  className={errors.description ? "border-red-500" : ""}
                 />
-                {errors.description && (
-                  <p className="text-red-500 text-sm mt-1">{errors.description}</p>
-                )}
               </div>
-
-              <div>
-                <Label htmlFor="maxAttendees">Maximum Attendees</Label>
-                <Input
-                  id="maxAttendees"
-                  type="number"
-                  value={formData.maxAttendees}
-                  onChange={(e) => setFormData({ ...formData, maxAttendees: e.target.value })}
-                  placeholder="Enter maximum number of attendees"
-                  className={errors.maxAttendees ? "border-red-500" : ""}
-                />
-                {errors.maxAttendees && (
-                  <p className="text-red-500 text-sm mt-1">{errors.maxAttendees}</p>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="foodAvailable"
-                  checked={formData.foodAvailable}
-                  onCheckedChange={(checked) => 
-                    setFormData({ ...formData, foodAvailable: checked as boolean })
-                  }
-                />
-                <Label htmlFor="foodAvailable">Food will be available at the event</Label>
-              </div>
+              
+              {(formData.title || formData.description) && (
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h3 className="font-medium text-blue-900 mb-2">Preview & Edit</h3>
+                  <p className="text-sm text-blue-700">
+                    Your AI-generated content appears above. Feel free to edit and customize it to match your voice!
+                  </p>
+                </div>
+              )}
             </div>
           </Card>
+        )}
 
-          {/* Smart Pricing Intelligence */}
-          {formData.eventType && formData.location && (
-            <SmartPricingIntelligence 
-              eventType={formData.eventType}
-              location={formData.location}
-            />
-          )}
-
-          {/* Customer Targeting Tools */}
-          {formData.eventType && (
-            <CustomerTargetingTools 
-              eventType={formData.eventType}
-              cuisine={formData.eventType}
-            />
-          )}
-
-          {/* AI Assistant Section */}
-          <div className="mb-6">
-            <AIEventHelper 
-              onGenerateTitle={handleGenerateTitle}
-              onGenerateDescription={handleGenerateDescription}
-              onSuggestVendors={suggestVendors}
-              onGenerateMarketing={handleGenerateMarketing}
-              isLoading={isLoading}
-              eventData={{
-                eventType: formData.eventType,
-                location: formData.location,
-                eventName: formData.eventName
-              }}
-            />
-          </div>
-
-          {/* Food Integration */}
+        {/* Step 3: Smart Pricing */}
+        {currentStep === 3 && (
           <Card className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Food Integration</h3>
-            
-            {formData.foodAvailable && (
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600">
-                  Select restaurants that will participate in your event:
-                </p>
-                
-                <div className="space-y-3">
-                  {availableRestaurants.map((restaurant) => (
-                    <div key={restaurant.id} className="flex items-center space-x-3 p-3 border rounded-lg">
-                      <Checkbox
-                        id={`restaurant-${restaurant.id}`}
-                        checked={formData.partnerRestaurants.includes(restaurant.id)}
-                        onCheckedChange={(checked) => {
-                          if (checked === true) {
-                            setFormData({
-                              ...formData,
-                              partnerRestaurants: [...formData.partnerRestaurants, restaurant.id]
-                            });
-                          } else {
-                            setFormData({
-                              ...formData,
-                              partnerRestaurants: formData.partnerRestaurants.filter(id => id !== restaurant.id)
-                            });
-                          }
-                        }}
-                      />
-                      
-                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
-                        <img
-                          src={restaurantImages[restaurant.id]}
-                          alt={restaurant.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      
-                      <div className="flex-1">
-                        <Label htmlFor={`restaurant-${restaurant.id}`} className="font-medium">
-                          {restaurant.name}
-                        </Label>
-                        <p className="text-sm text-gray-500">{restaurant.cuisine}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="bg-orange-50 p-4 rounded-lg">
-                  <h4 className="font-medium text-orange-900 mb-1">How it works:</h4>
-                  <ul className="text-sm text-orange-700 space-y-1">
-                    <li>• Attendees can pre-order food from participating restaurants</li>
-                    <li>• Orders are delivered to your event coordination desk</li>
-                    <li>• You'll receive updates on delivery timings</li>
-                    <li>• Restaurants pay a small commission for increased visibility</li>
-                  </ul>
-                </div>
+            <h2 className="text-xl font-semibold mb-4">Smart Pricing Intelligence</h2>
+            <div className="space-y-4">
+              <div className="bg-orange-50 p-4 rounded-lg">
+                <h3 className="font-medium text-orange-900 mb-2">Current Price: ₹{formData.ticketPrice || '0'}</h3>
+                <Button
+                  variant="outline"
+                  onClick={handleGeneratePricing}
+                  disabled={isGenerating || !formData.ticketPrice}
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Analyze Market Pricing
+                </Button>
               </div>
-            )}
+              
+              {formData.pricingSuggestion && (
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-medium text-green-900 mb-2">AI Pricing Analysis</h4>
+                  <p className="text-sm text-green-700">{formData.pricingSuggestion}</p>
+                </div>
+              )}
+            </div>
           </Card>
+        )}
 
-          {/* Success Stories Preview */}
-          <Card className="p-6 bg-green-50 border-green-200">
-            <h3 className="text-lg font-semibold text-green-900 mb-4">Success Stories</h3>
-            <div className="space-y-3">
-              <div className="bg-white p-4 rounded-lg border border-green-200">
-                <p className="text-sm text-green-800 font-medium">
-                  "AI-generated event descriptions increased our bookings by 40%"
-                </p>
-                <p className="text-xs text-green-600 mt-1">- Cafe Mocha, Bangalore</p>
+        {/* Step 4: Customer Targeting */}
+        {currentStep === 4 && (
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Customer Targeting</h2>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-600">Select your target audience segments</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGenerateAudience}
+                  disabled={isGenerating || !formData.eventType}
+                >
+                  <Wand2 className="h-4 w-4 mr-2" />
+                  Recommend Audience
+                </Button>
               </div>
-              <div className="bg-white p-4 rounded-lg border border-green-200">
-                <p className="text-sm text-green-800 font-medium">
-                  "Smart pricing helped us optimize revenue while keeping events full"
+              
+              <div className="grid grid-cols-2 gap-2">
+                {audienceSegments.map((segment) => (
+                  <Button
+                    key={segment}
+                    variant={formData.targetAudience.includes(segment) ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      const newAudience = formData.targetAudience.includes(segment)
+                        ? formData.targetAudience.filter(a => a !== segment)
+                        : [...formData.targetAudience, segment];
+                      setFormData({ ...formData, targetAudience: newAudience });
+                    }}
+                    className="justify-start text-left"
+                  >
+                    {segment}
+                  </Button>
+                ))}
+              </div>
+              
+              {formData.targetAudience.length > 0 && (
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h4 className="font-medium text-blue-900 mb-2">Selected Segments ({formData.targetAudience.length})</h4>
+                  <p className="text-sm text-blue-700">
+                    Your event will be promoted to: {formData.targetAudience.join(', ')}
+                  </p>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {/* Step 5: Visuals */}
+        {currentStep === 5 && (
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Event Visuals</h2>
+            <div className="space-y-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 mb-4">Upload your event banner image</p>
+                <Button variant="outline">
+                  Choose File
+                </Button>
+              </div>
+              
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <h4 className="font-medium text-purple-900 mb-2">AI Banner Generation (Coming Soon)</h4>
+                <p className="text-sm text-purple-700">
+                  Generate professional event banners with AI based on your event details and brand colors.
                 </p>
-                <p className="text-xs text-green-600 mt-1">- Spice Garden, Mumbai</p>
               </div>
             </div>
           </Card>
+        )}
 
-          <div className="flex justify-end">
+        {/* Step 6: Review & Publish */}
+        {currentStep === 6 && (
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Review & Publish</h2>
+            <div className="space-y-6">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold text-lg mb-2">{formData.title || 'Event Title'}</h3>
+                <p className="text-gray-600 mb-3">{formData.description || 'Event description will appear here'}</p>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div><strong>Type:</strong> {formData.eventType}</div>
+                  <div><strong>Date:</strong> {formData.date}</div>
+                  <div><strong>Time:</strong> {formData.time}</div>
+                  <div><strong>Price:</strong> ₹{formData.ticketPrice}</div>
+                  <div><strong>Capacity:</strong> {formData.capacity} people</div>
+                  <div><strong>Location:</strong> {formData.location}</div>
+                </div>
+                {formData.targetAudience.length > 0 && (
+                  <div className="mt-3">
+                    <strong>Target Audience:</strong> {formData.targetAudience.join(', ')}
+                  </div>
+                )}
+              </div>
+              
+              <Button onClick={handlePublish} className="w-full bg-orange-500 hover:bg-orange-600">
+                <Check className="h-4 w-4 mr-2" />
+                Publish Event
+              </Button>
+            </div>
+          </Card>
+        )}
+
+        {/* Navigation */}
+        <div className="flex justify-between mt-6">
+          <Button 
+            variant="outline" 
+            onClick={handlePrevious}
+            disabled={currentStep === 1}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Previous
+          </Button>
+          
+          {currentStep < 6 && (
             <Button 
-              type="submit" 
-              disabled={isSubmitting}
-              className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600"
+              onClick={handleNext}
+              disabled={
+                (currentStep === 1 && (!formData.eventType || !formData.date || !formData.time || !formData.ticketPrice || !formData.capacity || !formData.location))
+              }
             >
-              {isSubmitting ? "Creating Event..." : "Create AI-Powered Event"}
+              Next
+              <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
-          </div>
-        </form>
+          )}
+        </div>
       </div>
     </div>
   );

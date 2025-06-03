@@ -16,7 +16,7 @@ const TabBar = () => {
     swiggy: 2,
     instamart: 0,
     events: 1,
-    account: 0
+    organize: 0
   };
 
   const tabs = [
@@ -52,18 +52,18 @@ const TabBar = () => {
       label: 'EVENTS',
       icon: Calendar,
       path: '/',
-      isActive: location.pathname === '/' || location.pathname.startsWith('/event') || location.pathname === '/create-event',
+      isActive: location.pathname === '/' || location.pathname.startsWith('/event'),
       notifications: notifications.events,
       description: 'Dine & Events'
     },
     {
-      id: 'account',
-      label: 'ACCOUNT',
-      icon: User,
-      path: '/account',
-      isActive: false,
-      notifications: notifications.account,
-      description: 'Profile & More'
+      id: 'organize',
+      label: 'ORGANIZE',
+      icon: Plus,
+      path: '/create-event',
+      isActive: location.pathname === '/create-event',
+      notifications: notifications.organize,
+      description: 'Create Events'
     }
   ];
 
@@ -80,7 +80,7 @@ const TabBar = () => {
         </div>
       </div>
       
-      <div className="flex relative">
+      <div className="flex">
         {tabs.map((tab) => {
           const IconComponent = tab.icon;
           return (
@@ -106,17 +106,6 @@ const TabBar = () => {
             </button>
           );
         })}
-
-        {/* Floating Action Button for Partners */}
-        {isPartner && (
-          <button
-            onClick={() => navigate('/create-event')}
-            className="absolute -top-6 right-4 w-12 h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
-            aria-label="Create Event"
-          >
-            <Plus className="h-6 w-6" />
-          </button>
-        )}
       </div>
     </div>
   );
