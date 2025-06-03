@@ -1,12 +1,15 @@
 
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, ShoppingBag, Calendar, User, Package, Gift } from 'lucide-react';
+import { MapPin, ShoppingBag, Calendar, User, Package, Gift, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const TabBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Mock partner status - in real app this would come from auth context
+  const isPartner = true; // Mock value - replace with actual partner status check
 
   // Mock notification counts for ecosystem integration
   const notifications = {
@@ -77,7 +80,7 @@ const TabBar = () => {
         </div>
       </div>
       
-      <div className="flex">
+      <div className="flex relative">
         {tabs.map((tab) => {
           const IconComponent = tab.icon;
           return (
@@ -103,6 +106,17 @@ const TabBar = () => {
             </button>
           );
         })}
+
+        {/* Floating Action Button for Partners */}
+        {isPartner && (
+          <button
+            onClick={() => navigate('/create-event')}
+            className="absolute -top-6 right-4 w-12 h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
+            aria-label="Create Event"
+          >
+            <Plus className="h-6 w-6" />
+          </button>
+        )}
       </div>
     </div>
   );
